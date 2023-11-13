@@ -42,18 +42,21 @@ export const styles = StyleSheet.create({
     left: 200
   },
   fireText: {
+    fontFamily:'Exo_400Regular',
     color: 'white',
-    fontSize: 10,
+    fontSize: 12,
+    letterSpacing: 1,
     justifyContent: 'center',
     alignItems: 'center',
     left: 200,
   },
   fireText2: {
+    fontFamily: 'Exo_800ExtraBold',
+    fontSize: 22,
+    letterSpacing: 2,
     color: 'white',
-    fontSize: 20,
-    fontWeight: 'bold',
     justifyContent: 'center',
     alignItems: 'center',
-    left: 200,
+    left: 180,
   }
 });

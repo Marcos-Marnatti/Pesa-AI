@@ -41,16 +41,20 @@ export const styles = StyleSheet.create({
     margin: 5
   },
   fireText: {
+    fontFamily:'Exo_400Regular',
     color: 'white',
-    fontSize: 10,
+    fontSize: 12,
+    letterSpacing: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
   fireText2: {
+    fontFamily: 'Exo_800ExtraBold',
+    fontSize: 24,
+    letterSpacing: 2,
     color: 'white',
-    fontSize: 20,
-    fontWeight: 'bold',
     justifyContent: 'center',
     alignItems: 'center',
+    left: 25,
   }
 });

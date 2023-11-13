@@ -1,20 +1,19 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { View, StatusBar } from 'react-native';
+import { useFonts, Exo_800ExtraBold, Exo_400Regular } from '@expo-google-fonts/exo';
+
+import { Loading } from '@components/Loading';
+import { StackNavigator } from '@routes/stack.route';
+import AuthenticatedUserProvider from './src/context/AuthenticationContext';
 
 export default function App() {
+  const [loadedFonts] = useFonts({ Exo_800ExtraBold, Exo_400Regular });
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <AuthenticatedUserProvider>
+      <View style={{ flex: 1, marginTop: 50, backgroundColor: 'white' }}>
+        <StatusBar barStyle='default' translucent />
+        {loadedFonts ? <StackNavigator /> : <Loading />}
+      </View>
+    </AuthenticatedUserProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

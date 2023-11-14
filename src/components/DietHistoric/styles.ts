@@ -19,10 +19,10 @@ export const styles = StyleSheet.create({
   model3D: {
     position: 'absolute',
     right: 0,
-    bottom: 0,
+    bottom: -3,
     zIndex: 10,
     width: '50%',
-    height: '120%',
+    height: '100%',
     resizeMode: 'contain',
     transform: [{ rotateY: '180deg' }],
   },

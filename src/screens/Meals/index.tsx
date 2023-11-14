@@ -14,11 +14,12 @@ import addIcon from "@assets/add.png";
 
 import { styles } from './styles';
 import { TMeals } from 'src/@types/Food';
+import { dinner, lunch } from './meals';
 
 
 export function Meals() {
   const navigation = useNavigation<StackTypes>();
-  const [meals, setMeals] = useState<TMeals[]>([]);
+  const [meals, setMeals] = useState<TMeals[]>([lunch, dinner]);
 
   async function handleDeleteMeal(mealTitle: string) {
     Alert.alert('Remover', `Remover ${mealTitle}?`, [
@@ -65,16 +66,18 @@ export function Meals() {
       <View style={styles.middleScreen}>
         <View style={styles.statsContainer}>
           <View style={styles.statsBox}>
-            <View style={{ width: '55%', flexDirection: 'row' }}>
+            <View style={{ width: '55%', flexDirection: 'row', marginTop: 10 }}>
               <Image source={mealsIcon} style={styles.myIcon} />
               <View style={styles.statsBox}>
                 <Text style={[styles.text, { fontSize: 28 }]}>Refeições</Text>
               </View>
             </View>
+            <View style={{ height: '2%', width: '80%', borderBottomWidth: 1, borderBottomColor: '#DFD8C8', alignSelf: 'center', marginTop: 10 }} />
           </View>
 
+
         </View>
-        <View style={{ marginHorizontal: '6%', height: '65%' }}>
+        <View style={{ marginHorizontal: '6%', height: '70%' }}>
           <ScrollView style={styles.cardContainer} horizontal showsHorizontalScrollIndicator={false}>
             {meals.length > 0 ?
               (meals.map((meal, index) => (
@@ -83,6 +86,11 @@ export function Meals() {
                   <View style={{ width: '80%', flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: '7%' }}>
                     <TouchableOpacity onPress={() => handleDeleteMeal(meal.title)} style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
                       <Image source={removeIcon} style={[styles.myIcon, { width: 42, height: 42 }]} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      // onPress={ }
+                      style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
+                      <Image source={addIcon} style={[styles.myIcon, { width: 52, height: 52 }]} />
                     </TouchableOpacity>
                     <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
                       <Image source={editMealIcon} style={[styles.myIcon, { width: 48, height: 48 }]} />
@@ -94,17 +102,7 @@ export function Meals() {
             }
           </ScrollView>
         </View>
-        <View style={{ height: '2%', width: '90%', borderBottomWidth: 1, borderBottomColor: '#DFD8C8', alignSelf: 'center' }} />
-        <TouchableOpacity
-          activeOpacity={.8}
-          style={styles.button}
-        // onPress={handleAICompletion}
-        >
-          <Text style={styles.textButton}>
-            Procurar alimento
-          </Text>
-          <Image source={searchIcon} style={{ width: 32, height: 32, right: -80, tintColor: 'white' }} />
-        </TouchableOpacity >
+
       </View>
       <BottomTab />
     </View >

@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 
 import { styles } from './styles';
 
-import { WorkoutBanner } from "@components/WorkoutBanner";
+import { DietHistoric } from "@components/DietHistoric";
 import { Header } from "@components/Header";
 import { DietBanner } from "@components/DietBanner";
 import { BottomTab } from "@components/BottomTab";
@@ -39,7 +39,7 @@ export function Home() {
           <DietBanner navigation={navigation} />
         </View>
         <View style={styles.dietScreen}>
-          <WorkoutBanner />
+          <DietHistoric />
         </View>
         <View style={{ height: 25, width: '90%', borderBottomWidth: 1, borderBottomColor: '#DFD8C8', alignSelf: 'center' }} />
         <View style={styles.caloriesContainer}>

@@ -1,6 +1,6 @@
 import { TMeals } from "src/@types/Food";
 
-const dinner: TMeals = {
+export const dinner: TMeals = {
   title: "Jantar",
   foods: [
     {
@@ -30,7 +30,7 @@ const dinner: TMeals = {
   ],
 };
 
-const lunch: TMeals = {
+export const lunch: TMeals = {
   title: "Almoço",
   foods: [
     {

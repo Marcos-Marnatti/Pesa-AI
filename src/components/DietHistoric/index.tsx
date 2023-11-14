@@ -2,18 +2,18 @@ import { Image, ImageBackground, Text, View } from "react-native";
 
 import { styles } from "./styles";
 
-import purpleBanner from "@assets/banner_purple.png"
-import model3D from "@assets/model.png";
 import dietH from "@assets/dietH.png";
+import banner from "@assets/sepia_banner.jpg";
+import ampIcon from "@assets/amp.png";
 
-export function WorkoutBanner() {
+export function DietHistoric({ navigation }: { navigation?: any}) {
   return (
     <>
-      <ImageBackground style={styles.banner} source={purpleBanner}>
+      <ImageBackground style={styles.banner} source={banner} >
         <View style={styles.bannerContent}>
           <View style={styles.bannerRowContent}>
             <View style={styles.fireImageContainer}>
-              <Image source={dietH} resizeMode="contain" style={styles.fireImage} />
+              <Image source={ampIcon} resizeMode="contain" style={styles.fireImage} />
             </View>
             <Text style={styles.fireText}>
               Consulte suas dietas
@@ -22,7 +22,7 @@ export function WorkoutBanner() {
           <Text style={styles.fireText2}>Histórico</Text>
         </View>
       </ImageBackground >
-      <Image source={model3D} style={styles.model3D} resizeMode="contain" />
+      <Image source={dietH} style={styles.model3D} resizeMode="contain" />
     </>
   );
 }

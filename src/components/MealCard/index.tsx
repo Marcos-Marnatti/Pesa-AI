@@ -2,6 +2,8 @@ import React, { useRef } from 'react';
 import { View, TouchableOpacity, Image, Animated, Easing } from 'react-native';
 
 import mealIcon from "@assets/meal.png";
+import addIcon from "@assets/add.png";
+import editMealIcon from "@assets/editMeal.png";
 
 import { styles } from './styles';
 import { TMeals } from 'src/@types/Food';
@@ -27,13 +29,16 @@ const Menu = ({ meal, titleSize, detailsOpacity }: { meal: TMeals, titleSize: An
                 <Animated.Text style={[styles.text, { fontSize: 18, opacity: detailsOpacity }]}>
                   {food.kcal} Kcal
                 </Animated.Text>
+                <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                  <Animated.Image source={editMealIcon} style={[styles.myIcon, { width: 24, height: 24, opacity: detailsOpacity }]} />
+                </TouchableOpacity>
               </View>
             </View>
             <Animated.View style={{ height: 5, borderBottomWidth: 1, borderBottomColor: '#DFD8C8', opacity: detailsOpacity }} />
           </View>
         ))
       }
-    </View>
+    </View >
   )
 };
 
@@ -98,6 +103,11 @@ export function Card({ meal }: { meal: TMeals }) {
           <Image source={mealIcon} style={styles.cardImage} />
         </Animated.View>
         <Menu meal={meal} titleSize={titleSize} detailsOpacity={detailsOpacity} />
+        <TouchableOpacity
+          // onPress={ }
+          style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
+          <Animated.Image source={addIcon} style={[styles.myIcon, { width: 42, height: 42, opacity: detailsOpacity }]} />
+        </TouchableOpacity>
       </TouchableOpacity>
     </View>
   );

@@ -7,8 +7,6 @@ import { Card } from "@components/MealCard";
 import { BottomTab } from "@components/BottomTab";
 
 import mealsIcon from "@assets/meal.png";
-import searchIcon from "@assets/search.png";
-import editMealIcon from "@assets/editMeal.png";
 import removeIcon from "@assets/remove.png";
 import addIcon from "@assets/add.png";
 
@@ -83,17 +81,15 @@ export function Meals() {
               (meals.map((meal, index) => (
                 <View key={index} style={{ flex: 1 }}>
                   <Card key={index} meal={meal} />
-                  <View style={{ width: '80%', flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: '7%' }}>
-                    <TouchableOpacity onPress={() => handleDeleteMeal(meal.title)} style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
-                      <Image source={removeIcon} style={[styles.myIcon, { width: 42, height: 42 }]} />
-                    </TouchableOpacity>
+                  <View style={{ width: '80%', flexDirection: 'row', justifyContent: 'center', marginHorizontal: '7%' }}>
                     <TouchableOpacity
-                      // onPress={ }
-                      style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
-                      <Image source={addIcon} style={[styles.myIcon, { width: 52, height: 52 }]} />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
-                      <Image source={editMealIcon} style={[styles.myIcon, { width: 48, height: 48 }]} />
+                      activeOpacity={.8}
+                      onPress={() => handleDeleteMeal(meal.title)}
+                      style={{ height: 60, borderRadius: 26, width: '60%', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', backgroundColor: '#F44336' }}>
+                      <Image source={removeIcon} style={[styles.myIcon, { width: 52, height: 52, left: -15, }]} />
+                      <Text style={styles.textButton}>
+                        Deletar
+                      </Text>
                     </TouchableOpacity>
                   </View>
                 </View>)

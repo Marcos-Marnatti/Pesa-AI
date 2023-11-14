@@ -62,6 +62,5 @@ export const styles = StyleSheet.create({
   myIcon: {
     width: 46,
     height: 46,
-    alignSelf: 'center',
   },
 });

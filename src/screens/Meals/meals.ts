@@ -57,5 +57,29 @@ export const lunch: TMeals = {
       quantity: 100,
       quantityUnit: "g",
     },
+    // {
+    //   name: "Massa",
+    //   kcal: 165,
+    //   quantity: 100,
+    //   quantityUnit: "g",
+    // },
+    // {
+    //   name: "Lentilha",
+    //   kcal: 165,
+    //   quantity: 100,
+    //   quantityUnit: "g",
+    // },
+    // {
+    //   name: "Frango",
+    //   kcal: 165,
+    //   quantity: 100,
+    //   quantityUnit: "g",
+    // },
+    // {
+    //   name: "Salada",
+    //   kcal: 165,
+    //   quantity: 100,
+    //   quantityUnit: "g",
+    // },
   ]
 };

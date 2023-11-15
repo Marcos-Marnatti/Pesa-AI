@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import { View, Text, TouchableOpacity, Image, Alert } from "react-native";
 import Slider from '@react-native-community/slider';
 
@@ -13,15 +13,34 @@ import mealIcon from "@assets/meal.png";
 import goalIcon from "@assets/goal.png";
 import { useNavigation } from "@react-navigation/native";
 import { StackTypes } from "@routes/stack.route";
+import { UserService } from "src/@types/User";
+import { handleGetUserData } from "@services/reqFirebase";
+import { AuthenticatedUserContext } from "@context/AuthenticationContext";
 
 export function GenerateDiet() {
+  const navigation = useNavigation<StackTypes>();
   const [calories, setCalories] = useState<string>('');
   // const [diet, setDiet] = useState<string>('');
   const [goal, setGoal] = useState<string>('');
   const [meals, setMeal] = useState<string>('');
   const [temperature, setTemperature] = useState<number>(0.3);
+  
+  const { setUser, user }: any = useContext(AuthenticatedUserContext);
+  const [userData, setUserData] = useState<UserService>();
 
-  const navigation = useNavigation<StackTypes>();
+
+  useEffect(() => {
+    async function handle() {
+      if (user) {
+        await handleGetUserData(user.email)
+          .then((response) => {
+            setUserData(response);
+          })
+      }
+    }
+    handle();
+  }, []);
+
 
   async function handleAICompletion() {
     try {
@@ -38,7 +57,7 @@ export function GenerateDiet() {
       }
 
       await api.post('/ai/complete', data)
-      //@ts-ignore
+        //@ts-ignore
         .then((response) => navigation.navigate('GerarDietaResposta', { response: response.data }))
       // setDiet(response.data);
 
@@ -48,15 +67,14 @@ export function GenerateDiet() {
   }
 
   const caloriesData = [
-    { label: '3000 Kcal', value: '3000' },
-    { label: '2500 Kcal', value: '2500' },
-    { label: '4000 Kcal', value: '4000' },
+    { label:`${Math.trunc(userData?.basalMetabolicRate.toPrecision())} Kcal`, value: `${Math.trunc(userData?.basalMetabolicRate.toPrecision())}` },
   ];
 
   const goalData = [
-    { label: 'Ganho de massa muscular', value: 'Ganho de massa muscular' },
-    { label: 'Perda de gordura', value: 'Perda de gordura' },
-    { label: 'Manutenção', value: 'Manutenção' },
+    {
+      label: `${userData?.weightGoal === 'LOSE' ? 'Perda de gordura' : userData?.weightGoal === 'GAIN' ? 'Ganho de massa muscular' : 'Manutenção'}`,
+      value: `${userData?.weightGoal === 'LOSE' ? 'Perda de gordura' : userData?.weightGoal === 'GAIN' ? 'Ganho de massa muscular' : 'Manutenção'}`,
+    },
   ];
 
   const mealsData = [

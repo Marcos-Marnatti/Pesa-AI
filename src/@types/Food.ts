@@ -1,4 +1,4 @@
-type Food = {
+export type Food = {
   name: string;
   kcal: number;
   quantity: number;
@@ -8,4 +8,4 @@ type Food = {
 export type TMeals = {
   title: string;
   foods: Food[];
-}
+};

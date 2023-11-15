@@ -11,21 +11,52 @@ import removeIcon from "@assets/remove.png";
 import addIcon from "@assets/add.png";
 
 import { styles } from './styles';
-import { TMeals } from 'src/@types/Food';
+import { Food, TMeals } from 'src/@types/Food';
 import { dinner, lunch } from './meals';
 
 
 export function Meals() {
   const navigation = useNavigation<StackTypes>();
-  const [meals, setMeals] = useState<TMeals[]>([lunch, dinner]);
+  const [meals, setMeals] = useState<TMeals[]>([]);
 
-  async function handleDeleteMeal(mealTitle: string) {
-    Alert.alert('Remover', `Remover ${mealTitle}?`, [
+  const addNewMeal = (title: string, foods: Food[]) => {
+    const newMeal: TMeals = { title, foods };
+    setMeals(prevMeals => [...prevMeals, newMeal]);
+  };
+
+  const handleAddMeal = () => {
+    const newFoods: Food[] = [
+      {
+        name: "Arroz",
+        kcal: 165,
+        quantity: 100,
+        quantityUnit: "g",
+      },
+      {
+        name: "Feijão",
+        kcal: 165,
+        quantity: 100,
+        quantityUnit: "g",
+      },
+    ];
+    addNewMeal(`Refeição ${meals.length + 1}`, newFoods); // Adiciona uma nova refeição chamada "Almoço"
+  };
+
+  const removeMealByIndex = (index: number) => {
+    setMeals(prevMeals => {
+      const updatedMeals = [...prevMeals];
+      updatedMeals.splice(index, 1);
+      return updatedMeals;
+    });
+  };
+
+  const handleRemoveMeal = (index: number, refTitle: string) => {
+    Alert.alert('Remover', `Remover ${refTitle}?`, [
       {
         text: 'Sim',
         onPress: () => {
-          setMeals(meals.filter(meal => meal.title !== mealTitle));
-          Alert.alert(`Refeição Removida!`)
+          removeMealByIndex(index);
+          Alert.alert(`Item Removido!`);
         }
       },
       {
@@ -35,12 +66,45 @@ export function Meals() {
     ])
   };
 
-  async function handleAddMeal() {
-    const newMeal: TMeals = {
-      title: `Refeição ${meals.length + 1}`,
-      foods: []
-    };
-    setMeals(prevState => [...prevState, newMeal]);
+  const removeFoodFromMeal = (mealTitle: string, foodName: string) => {
+    setMeals(prevMeals => {
+      return prevMeals.map(meal => {
+        if (meal.title === mealTitle) {
+          const updatedFoods = meal.foods.filter(food => food.name !== foodName);
+          return { ...meal, foods: updatedFoods };
+        }
+        return meal;
+      });
+    });
+  };
+
+  const addFoodToMeal = (mealTitle: string, newFood: Food) => {
+    setMeals(prevMeals => {
+      return prevMeals.map(meal => {
+        if (meal.title === mealTitle) {
+          const updatedFoods = [...meal.foods, newFood];
+          return { ...meal, foods: updatedFoods };
+        }
+        return meal;
+      });
+    });
+  };
+
+  const editFoodQuantityInMeal = (mealTitle: string, foodName: string, newQuantity: number) => {
+    setMeals(prevMeals => {
+      return prevMeals.map(meal => {
+        if (meal.title === mealTitle) {
+          const updatedFoods = meal.foods.map(food => {
+            if (food.name === foodName) {
+              return { ...food, quantity: newQuantity };
+            }
+            return food;
+          });
+          return { ...meal, foods: updatedFoods };
+        }
+        return meal;
+      });
+    });
   };
 
   return (
@@ -80,11 +144,11 @@ export function Meals() {
             {meals.length > 0 ?
               (meals.map((meal, index) => (
                 <View key={index} style={{ flex: 1 }}>
-                  <Card key={index} meal={meal} />
+                  <Card key={index} meal={meal} onRemoveFood={removeFoodFromMeal} onAddFood={addFoodToMeal} onEditFood={editFoodQuantityInMeal}/>
                   <View style={{ width: '80%', flexDirection: 'row', justifyContent: 'center', marginHorizontal: '7%' }}>
                     <TouchableOpacity
                       activeOpacity={.8}
-                      onPress={() => handleDeleteMeal(meal.title)}
+                      onPress={() => handleRemoveMeal(index, meal.title)}
                       style={{ height: 60, borderRadius: 26, width: '60%', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', backgroundColor: '#F44336' }}>
                       <Image source={removeIcon} style={[styles.myIcon, { width: 52, height: 52, left: -15, }]} />
                       <Text style={styles.textButton}>

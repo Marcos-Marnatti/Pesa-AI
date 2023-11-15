@@ -27,14 +27,14 @@ const HeaderTitle = ({ username }: { username: string; }) => {
 };
 
 
-export function Header({ onPress }: { onPress?: () => void }) {
+export function Header({ onPress, userName }: { onPress?: () => void, userName: string; }) {
   return (
     <>
       {
         onPress ?
           <View style={styles.header}>
             <ImageContainer image={avatar} />
-            <HeaderTitle username={'Maurício'} />
+            <HeaderTitle username={userName} />
             <View style={{ alignSelf: "center", marginEnd: 10 }}>
               <Icons width={36} height={36} tintColor={'grey'} icon={logout} onPress={onPress} />
             </View>
@@ -42,7 +42,7 @@ export function Header({ onPress }: { onPress?: () => void }) {
           :
           <View style={styles.header}>
             <ImageContainer image={avatar} />
-            <HeaderTitle username={'Maurício'} />
+            <HeaderTitle username={userName} />
           </View>
 
       }

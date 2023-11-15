@@ -17,6 +17,7 @@ import { Loading } from '@components/Loading';
 import { AuthenticatedUserContext } from '../context/AuthenticationContext';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../config/firebase';
+import { SignupAnamnese } from '@screens/SignUpAnamenese';
 
 const Stack = createNativeStackNavigator();
 
@@ -59,6 +60,7 @@ export function StackNavigator() {
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name='SignIn' component={SignIn} />
           <Stack.Screen name='SignUp' component={SignUp} />
+          <Stack.Screen name='SignupAnamnese' component={SignupAnamnese} />
         </Stack.Navigator>
       ) : (
         <Stack.Navigator screenOptions={{ headerShown: false }}>

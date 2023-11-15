@@ -11,16 +11,18 @@ interface DataItem {
 type Props = {
   selectLabel: string,
   selectPlaceHolder: string,
-  onSelectedValue: (value: string) => void,
-  data: string;
+  onSelectedValue: (value: number) => void,
+  data: number;
   icon: ImageSourcePropType,
+  color?: string,
+  placeHolderColor?: string,
 }
 
-const Input = ({ selectLabel, selectPlaceHolder, onSelectedValue, data, icon }: Props) => {
+const Input = ({ selectLabel, selectPlaceHolder, onSelectedValue, data, icon, color, placeHolderColor }: Props) => {
 
   return (
     <View style={styles.container}>
-      <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#FF7C29', marginBottom: 10, marginStart: 5 }}>{selectLabel}</Text>
+      <Text style={{ fontSize: 16, fontWeight: 'bold', color: color, marginBottom: 10, marginStart: 5 }}>{selectLabel}</Text>
       <View style={styles.containerContent}>
         <Image source={icon} style={styles.myIcon} />
         <TextInput
@@ -37,12 +39,12 @@ const Input = ({ selectLabel, selectPlaceHolder, onSelectedValue, data, icon }: 
             fontSize: 16,
           }}
           placeholder={selectPlaceHolder}
-          placeholderTextColor='grey'
+          placeholderTextColor={placeHolderColor}
           keyboardType="decimal-pad"
           autoCapitalize="none"
-          value={data}
+          value={data.toString()}
           textContentType="none"
-          onChangeText={onSelectedValue}
+          onChangeText={text => onSelectedValue(Number(text))}
         />
       </View>
     </View>

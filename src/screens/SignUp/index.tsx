@@ -6,7 +6,7 @@ import { BlurView } from 'expo-blur';
 import { HeaderPesaAi } from "@components/HeaderPesaAi";
 import { BottomPesaAi } from "@components/BottomPesaAi";
 
-import { handleSignUp } from "../../services/reqFirebase";
+import { handleSignUp, handleSignUpAPI } from "../../services/reqFirebase";
 
 import union from '@assets/union.png'
 import { styles } from './styles';
@@ -20,16 +20,16 @@ export function SignUp() {
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
 
-  async function onSignUpHandle() {
+  function onSignUpHandleEmptyInput() {
     if (email.length === 0 || password.length === 0 || passwordConfirm.length === 0) {
-      return Alert.alert("Campo vazio", "Preencha todos os campos.");
+      Alert.alert("Campo vazio", "Preencha todos os campos.");
+      return false;
     }
     if (password !== passwordConfirm) {
-      return Alert.alert("Verifique sua senha", "As senhas nao conferem.")
+      Alert.alert("Verifique sua senha", "As senhas nao conferem.")
+      return false;
     }
-    const response = await handleSignUp({ email, password });
-
-    return response;
+    return true;
   }
 
   return (
@@ -78,11 +78,10 @@ export function SignUp() {
             />
           </View>
 
-          <TouchableOpacity style={styles.button}
+          {/* <TouchableOpacity style={styles.button}
             onPress={
               async () => {
                 const response = await onSignUpHandle();
-                console.log(response)
                 if (response != 'sucesso' && response != undefined) {
                   return (
                     Alert.alert(`${response}`)
@@ -91,6 +90,24 @@ export function SignUp() {
               }}
           >
             <Text style={styles.buttonText}>Cadastrar</Text>
+          </TouchableOpacity> */}
+
+          <TouchableOpacity style={styles.button}
+            onPress={() => {
+              const response = onSignUpHandleEmptyInput();
+              if (response) {
+                //@ts-ignore
+                navigation.navigate('SignupAnamnese', {
+                  response: {
+                    name: name,
+                    email: email,
+                    password: password,
+                  }
+                })
+              }
+            }}
+          >
+            <Text style={styles.buttonText}>Continuar</Text>
           </TouchableOpacity>
 
           <View style={styles.signUpContainer}>

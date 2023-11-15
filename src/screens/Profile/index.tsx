@@ -1,3 +1,4 @@
+import { useContext, useEffect, useState } from "react";
 import { View, Image, Text, TouchableOpacity } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 
@@ -5,7 +6,7 @@ import { StackTypes } from "@routes/stack.route";
 import { BottomTab } from "@components/BottomTab";
 
 import PhysicalConditioningIcon from "@assets/PhysicalConditioning.png";
-import frequencyIcon from "@assets/frequency.png";
+import genderIcon from "@assets/gender.png";
 import goalIcon from "@assets/goal.png";
 import heightIcon from "@assets/height.png";
 import weightIcon from "@assets/weight.png";
@@ -15,15 +16,30 @@ import { styles } from './styles';
 import { Header } from "@components/Header";
 import { auth } from "@config/firebase";
 import { AuthenticatedUserContext } from "@context/AuthenticationContext";
-import { useContext } from "react";
 
 import edit from "@assets/edit.png";
 import exit from "@assets/exit.png";
 
+import { handleGetUserData } from "@services/reqFirebase";
+import { UserService } from "src/@types/User";
 
 export function Profile() {
   const navigation = useNavigation<StackTypes>();
-  const { setUser }: any = useContext(AuthenticatedUserContext);
+  const { setUser, user }: any = useContext(AuthenticatedUserContext);
+  const [userData, setUserData] = useState<UserService>();
+
+  useEffect(() => {
+    async function handle() {
+      if (user) {
+        await handleGetUserData(user.email)
+          .then((response) => {
+            setUserData(response);
+          })
+      }
+    }
+    handle();
+  }, []);
+
 
   async function logout() {
     try {
@@ -34,10 +50,27 @@ export function Profile() {
     }
   };
 
+  function handleTranslateGender(gender: string) {
+    return userData?.sex === 'MALE' ? 'Masculino' :
+      userData?.sex === 'FEAMALE' ? 'Feminino' : '' 
+  }
+
+  function handleTranslateGoal(goal: string) {
+   return userData?.weightGoal === 'GAIN' ? 'Ganho de Massa' :
+      userData?.weightGoal === 'LOSE' ? 'Perda de gordura' :
+        userData?.weightGoal === 'MAINTAIN' ? 'Manutenção' : ''
+  }
+
+  function handleTranslatePhysicalActivity(physicalActivity: string) {
+    return userData?.physicalActivity === 'NO' ? 'Sedentário' :
+      userData?.physicalActivity === 'REGULAR' ? 'Intermediário' :
+        userData?.physicalActivity === 'FREQUENT' ? 'Ativo' : ''
+  }
+
   return (
     <View style={styles.screenContainer}>
       <View style={styles.header}>
-        <Header />
+        <Header userName={user.displayName} />
       </View >
 
       <View style={styles.middleScreen}>
@@ -45,7 +78,7 @@ export function Profile() {
           <View style={{ flex: 1, flexDirection: 'row' }}>
             <Image source={heightIcon} style={styles.myIcon} />
             <View style={styles.statsBox}>
-              <Text style={[styles.text, { fontSize: 24 }]}>178</Text>
+              <Text style={[styles.text, { fontSize: 24 }]}>{userData?.size}</Text>
               <Text style={[styles.text, styles.subText]}>Altura(cm)</Text>
             </View>
           </View>
@@ -53,7 +86,7 @@ export function Profile() {
             <View style={{ flex: 1, flexDirection: 'row' }}>
               <Image source={weightIcon} style={styles.myIcon} />
               <View style={styles.statsBox}>
-                <Text style={[styles.text, { fontSize: 24 }]}>89,6</Text>
+                <Text style={[styles.text, { fontSize: 24 }]}>{userData?.weight}</Text>
                 <Text style={[styles.text, styles.subText]}>Peso(kg)</Text>
               </View>
             </View>
@@ -61,7 +94,7 @@ export function Profile() {
           <View style={{ flex: 1, flexDirection: 'row' }}>
             <Image source={birthIcon} style={styles.myIcon} />
             <View style={styles.statsBox}>
-              <Text style={[styles.text, { fontSize: 24 }]}>25</Text>
+              <Text style={[styles.text, { fontSize: 24 }]}>{userData?.age}</Text>
               <Text style={[styles.text, styles.subText]}>Idade</Text>
             </View>
           </View>
@@ -72,7 +105,7 @@ export function Profile() {
             <View style={{ width: '65%', flexDirection: 'row' }}>
               <Image source={goalIcon} style={styles.myIcon} />
               <View style={styles.statsBox}>
-                <Text style={[styles.text, { fontSize: 24 }]}>Perda de gordura</Text>
+                <Text style={[styles.text, { fontSize: 24 }]}>{handleTranslateGoal(userData?.weightGoal)}</Text>
                 <Text style={[styles.text, styles.subText]}>Objetivo</Text>
               </View>
             </View>
@@ -84,17 +117,17 @@ export function Profile() {
             <View style={{ flex: 1, flexDirection: 'row' }}>
               <Image source={PhysicalConditioningIcon} style={styles.myIcon} />
               <View style={styles.statsBox}>
-                <Text style={[styles.text, { fontSize: 24 }]}>Ativo</Text>
+                <Text style={[styles.text, { fontSize: 24 }]}>{handleTranslatePhysicalActivity(userData?.physicalActivity)}</Text>
                 <Text style={[styles.text, styles.subText]}>Condicionamento</Text>
               </View>
             </View>
           </View>
 
           <View style={{ flex: 1, flexDirection: 'row' }}>
-            <Image source={frequencyIcon} style={styles.myIcon} />
+            <Image source={genderIcon} style={styles.myIcon} />
             <View style={styles.statsBox}>
-              <Text style={[styles.text, { fontSize: 24 }]}>5x</Text>
-              <Text style={[styles.text, styles.subText]}>Frequência</Text>
+              <Text style={[styles.text, { fontSize: 24 }]}>{handleTranslateGender(userData?.sex)}</Text>
+              <Text style={[styles.text, styles.subText]}>Sexo</Text>
             </View>
           </View>
         </View>

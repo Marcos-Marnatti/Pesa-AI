@@ -1,6 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { NativeStackNavigationProp, createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
 
 import { SignIn } from '@screens/SignIn';
 import { SignUp } from '@screens/SignUp';
@@ -15,48 +16,18 @@ import { GenerateDietResponse } from '@screens/GenerateDietResponse';
 import { Loading } from '@components/Loading';
 
 import { AuthenticatedUserContext } from '../context/AuthenticationContext';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../config/firebase';
 import { SignupAnamnese } from '@screens/SignUpAnamenese';
 
 const Stack = createNativeStackNavigator();
 
-type StackNavigator = {
-  SignIn: undefined;
-  SignUp: undefined;
-  Home: undefined;
-  Meals: undefined;
-  Anamnese: undefined;
-  Profile: undefined;
-  GerarDieta: undefined;
-  GerarDietaResposta: undefined;
-  Chat: undefined;
-}
-
-export type StackTypes = NativeStackNavigationProp<StackNavigator>;
-
 export function StackNavigator() {
-  //@ts-ignore
-  const { user, setUser } = useContext(AuthenticatedUserContext);
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    setIsLoading(true);
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUser(user);
-        setIsLoading(false);
-      } else {
-        setIsLoading(false);
-      }
-    });
-  }, []);
+  const { currentUser, isLoading } = useContext(AuthenticatedUserContext);
 
   return (
     <NavigationContainer >
-      {!user && isLoading ? (
+      {!currentUser && isLoading ? (
         <Loading />
-      ) : !user && !isLoading ? (
+      ) : !currentUser && !isLoading ? (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name='SignIn' component={SignIn} />
           <Stack.Screen name='SignUp' component={SignUp} />

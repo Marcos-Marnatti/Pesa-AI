@@ -1,12 +1,56 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 
-export const AuthenticatedUserContext = createContext({});
+import { auth } from "@config/firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import firebase from "firebase/compat/app";
 
-const AuthenticatedUserProvider = ({ children }: { children: any }) => {
-  const [user, setUser] = useState(null);
-  
+import { AuthenticatedUserContextType, UserService } from "src/@types/User";
+import { handleGetUserData } from "@services/reqFirebase";
+
+
+export const AuthenticatedUserContext = createContext<AuthenticatedUserContextType>({} as AuthenticatedUserContextType);
+
+const AuthenticatedUserProvider = ({ children }: { children: React.ReactNode }) => {
+  const [currentUser, setCurrentUser] = useState<firebase.UserInfo | null>(null);
+  const [userData, setUserData] = useState<UserService>();
+  const [isLoading, setIsLoading] = useState(false);
+
+
+  useEffect(() => {
+    async function handle() {
+      if (currentUser) {
+        await handleGetUserData(currentUser.email!)
+          .then((response) => {
+            setUserData(response);
+          })
+      }
+    };
+    
+    setIsLoading(true);
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCurrentUser(user);
+        setIsLoading(false);
+        handle();
+      } else {
+        setIsLoading(false);
+      }
+    });
+
+  }, [currentUser]);
+
+
+  async function logout() {
+    try {
+      auth.signOut();
+      setCurrentUser(null);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
-    <AuthenticatedUserContext.Provider value={{ user, setUser }}>
+    <AuthenticatedUserContext.Provider value={{ currentUser, userData, isLoading, logout }}>
       {children}
     </AuthenticatedUserContext.Provider>
   );

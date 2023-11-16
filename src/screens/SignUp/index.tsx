@@ -3,14 +3,14 @@ import { useNavigation } from "@react-navigation/native";
 import { View, ImageBackground, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import { BlurView } from 'expo-blur';
 
+import union from '@assets/union.png'
+
 import { HeaderPesaAi } from "@components/HeaderPesaAi";
 import { BottomPesaAi } from "@components/BottomPesaAi";
 
-import { handleSignUp, handleSignUpAPI } from "../../services/reqFirebase";
+import { StackTypes } from "src/@types/StackNavigator";
 
-import union from '@assets/union.png'
 import { styles } from './styles';
-import { StackTypes } from "@routes/stack.route";
 
 export function SignUp() {
   const navigation = useNavigation<StackTypes>();
@@ -77,20 +77,6 @@ export function SignUp() {
               onChangeText={(text) => setPasswordConfirm(text)}
             />
           </View>
-
-          {/* <TouchableOpacity style={styles.button}
-            onPress={
-              async () => {
-                const response = await onSignUpHandle();
-                if (response != 'sucesso' && response != undefined) {
-                  return (
-                    Alert.alert(`${response}`)
-                  )
-                }
-              }}
-          >
-            <Text style={styles.buttonText}>Cadastrar</Text>
-          </TouchableOpacity> */}
 
           <TouchableOpacity style={styles.button}
             onPress={() => {

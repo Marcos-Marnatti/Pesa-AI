@@ -1,12 +1,7 @@
 import { useState } from "react";
-import { useNavigation } from "@react-navigation/native";
 import { View, ImageBackground, Text, ScrollView, TouchableOpacity, Alert } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { BlurView } from 'expo-blur';
-
-import { HeaderPesaAi } from "@components/HeaderPesaAi";
-import { BottomPesaAi } from "@components/BottomPesaAi";
-
-import { handleSignUp, handleSignUpAPI } from "../../services/reqFirebase";
 
 import union from '@assets/union.png'
 import genderIcon from "@assets/gender.png";
@@ -16,13 +11,17 @@ import heightIcon from "@assets/height.png";
 import weightIcon from "@assets/weight.png";
 import birthIcon from "@assets/birthDate.png";
 
-import { styles } from './styles';
-import { StackTypes } from "@routes/stack.route";
-import Input from "@components/Input";
+import { HeaderPesaAi } from "@components/HeaderPesaAi";
+import { BottomPesaAi } from "@components/BottomPesaAi";
 import DropdownSignupComponent from "@components/DropDownSignUp";
+import Input from "@components/Input";
 
-//@ts-ignore
-export function SignupAnamnese({ route }) {
+import { StackTypes } from "src/@types/StackNavigator";
+import { handleSignUpAPI } from "@services/reqFirebase";
+
+import { styles } from './styles';
+
+export function SignupAnamnese({ route }: any) {
   const navigation = useNavigation<StackTypes>();
 
   const name = route.params.response.name;

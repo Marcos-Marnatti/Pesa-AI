@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
+import { useNavigation } from '@react-navigation/native';
 
 import DropdownComponent from "@components/DropDown";
+import { BottomTab } from "@components/BottomTab";
 import Input from "@components/Input";
 
 import genderIcon from "@assets/gender.png";
@@ -12,14 +14,9 @@ import weightIcon from "@assets/weight.png";
 import birthIcon from "@assets/birthDate.png";
 import anamnese from "@assets/anamnese.jpg";
 
-
-import { useNavigation } from '@react-navigation/native';
-
-import { StackTypes } from "@routes/stack.route";
+import { StackTypes } from "src/@types/StackNavigator";
 
 import { styles } from './styles';
-import { BottomTab } from "@components/BottomTab";
-
 
 export function Anamnese() {
   const navigation = useNavigation<StackTypes>();

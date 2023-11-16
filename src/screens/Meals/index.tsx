@@ -2,18 +2,17 @@ import React, { useState } from 'react';
 import { View, Text, ScrollView, Image, TouchableOpacity, Alert } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 
-import { StackTypes } from "@routes/stack.route";
-import { Card } from "@components/MealCard";
-import { BottomTab } from "@components/BottomTab";
-
 import mealsIcon from "@assets/meal.png";
 import removeIcon from "@assets/remove.png";
 import addIcon from "@assets/add.png";
 
-import { styles } from './styles';
-import { Food, TMeals } from 'src/@types/Food';
-import { dinner, lunch } from './meals';
+import { Card } from "@components/MealCard";
+import { BottomTab } from "@components/BottomTab";
 
+import { StackTypes } from 'src/@types/StackNavigator';
+import { Food, TMeals } from 'src/@types/Food';
+
+import { styles } from './styles';
 
 export function Meals() {
   const navigation = useNavigation<StackTypes>();
@@ -39,7 +38,7 @@ export function Meals() {
         quantityUnit: "g",
       },
     ];
-    addNewMeal(`Refeição ${meals.length + 1}`, newFoods); // Adiciona uma nova refeição chamada "Almoço"
+    addNewMeal(`Refeição ${meals.length + 1}`, newFoods);
   };
 
   const removeMealByIndex = (index: number) => {
@@ -162,7 +161,6 @@ export function Meals() {
             }
           </ScrollView>
         </View>
-
       </View>
       <BottomTab />
     </View >

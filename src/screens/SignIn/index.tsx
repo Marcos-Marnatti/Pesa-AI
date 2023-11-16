@@ -3,13 +3,14 @@ import { View, ImageBackground, Text, TextInput, TouchableOpacity, Alert } from 
 import { useNavigation } from "@react-navigation/native";
 import { BlurView } from 'expo-blur';
 
+import union from '@assets/union.png'
+
 import { HeaderPesaAi } from "@components/HeaderPesaAi";
 import { BottomPesaAi } from "@components/BottomPesaAi";
 
-import { StackTypes } from "@routes/stack.route";
+import { StackTypes } from "src/@types/StackNavigator";
 import { handleSignIn } from "../../services/reqFirebase";
 
-import union from '@assets/union.png'
 import { styles } from './styles';
 
 export function SignIn() {

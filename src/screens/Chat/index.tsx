@@ -1,20 +1,16 @@
+import { useState } from "react";
 import { View, Image, Text, TextInput, ImageSourcePropType, FlatList, Pressable, TouchableOpacity, Alert } from "react-native";
-
-import { styles } from './styles';
 
 import pesaAI from '@assets/pesaAIpng.png';
 import verified from '@assets/verified.png';
 import KeyboardShift from "@components/KeyboardAvoidView";
 import sentIcon from '@assets/sent.png';
-import { useState } from "react";
+
+import { ChatItemProp } from "src/@types/Chat";
 import { api } from "@lib/axios";
 
-type ChatItemProp = {
-  text: string;
-  iAmSender: boolean;
-  time: string;
-  index: number;
-}
+import { styles } from './styles';
+
 
 const ImageContainer = ({ image }: { image: ImageSourcePropType; }) => {
   return (

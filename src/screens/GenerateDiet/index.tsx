@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { View, Text, TouchableOpacity, Image } from "react-native";
 
-import Slider from '@react-native-community/slider';
-import DropdownComponent from "@components/DropDown";
-
 import healthDiet3D from "@assets/healthDiet.png";
 import caloriesIcon from "@assets/calories.png";
 import mealIcon from "@assets/meal.png";
 import goalIcon from "@assets/goal.png";
 import { useNavigation } from "@react-navigation/native";
+
+import Slider from '@react-native-community/slider';
+import DropdownComponent from "@components/DropDown";
 
 import { StackTypes } from "src/@types/StackNavigator";
 import { completionAI, handleData } from "./utils";

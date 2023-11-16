@@ -1,12 +1,12 @@
 import { View, Image, Text, ImageSourcePropType, ScrollView } from "react-native";
 
-import { styles } from './styles';
-
+import menu from "@assets/menu.png";
 import pesaAI from '@assets/pesaAIpng.png';
 import verified from '@assets/verified.png';
+
 import { BottomTab } from "@components/BottomTab";
 
-import menu from "@assets/menu.png";
+import { styles } from './styles';
 
 const ImageContainer = ({ image }: { image: ImageSourcePropType; }) => {
   return (
@@ -29,9 +29,8 @@ const HeaderTitle = () => {
   )
 };
 
-//@ts-ignore
-export function GenerateDietResponse({ route }) {
-  // console.log('response aqui \n' + route.params.response)
+
+export function GenerateDietResponse({ route }: any) {
   const response = route.params.response;
   const responseSplit = response.split('Refeição');
 

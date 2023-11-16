@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-
 import { SignIn } from '@screens/SignIn';
 import { SignUp } from '@screens/SignUp';
 import { Home } from '@screens/Home';
@@ -12,11 +11,11 @@ import { Profile } from '@screens/Profile';
 import { GenerateDiet } from '@screens/GenerateDiet';
 import { ChatIA } from '@screens/Chat';
 import { GenerateDietResponse } from '@screens/GenerateDietResponse';
+import { SignupAnamnese } from '@screens/SignUpAnamenese';
 
 import { Loading } from '@components/Loading';
 
-import { AuthenticatedUserContext } from '../context/AuthenticationContext';
-import { SignupAnamnese } from '@screens/SignUpAnamenese';
+import { AuthenticatedUserContext } from '@context/AuthenticationContext';
 
 const Stack = createNativeStackNavigator();
 

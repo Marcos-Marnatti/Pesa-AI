@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, ScrollView, Image, TouchableOpacity, Alert } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 
@@ -10,7 +10,9 @@ import { Card } from "@components/MealCard";
 import { BottomTab } from "@components/BottomTab";
 
 import { StackTypes } from 'src/@types/StackNavigator';
+import { AuthenticatedUserContext } from '@context/AuthenticationContext';
 import { Food, TMeals } from 'src/@types/Food';
+import { addFoodToMeal, addMeal, deleteFoodFromMeal, deleteMeal, fetchUserMeals } from '@services/reqFirestore';
 
 import { styles } from './styles';
 
@@ -18,43 +20,26 @@ export function Meals() {
   const navigation = useNavigation<StackTypes>();
   const [meals, setMeals] = useState<TMeals[]>([]);
 
-  const addNewMeal = (title: string, foods: Food[]) => {
-    const newMeal: TMeals = { title, foods };
-    setMeals(prevMeals => [...prevMeals, newMeal]);
+  const { currentUser } = useContext(AuthenticatedUserContext);
+
+  async function handleGetMeals() {
+    console.log('entrei')
+    await fetchUserMeals(currentUser?.uid!)
+      .then((response) => setMeals(response));
   };
 
-  const handleAddMeal = () => {
-    const newFoods: Food[] = [
-      {
-        name: "Arroz",
-        kcal: 165,
-        quantity: 100,
-        quantityUnit: "g",
-      },
-      {
-        name: "Feijão",
-        kcal: 165,
-        quantity: 100,
-        quantityUnit: "g",
-      },
-    ];
-    addNewMeal(`Refeição ${meals.length + 1}`, newFoods);
-  };
+  useEffect(() => {
+    handleGetMeals();
+  }, []);
 
-  const removeMealByIndex = (index: number) => {
-    setMeals(prevMeals => {
-      const updatedMeals = [...prevMeals];
-      updatedMeals.splice(index, 1);
-      return updatedMeals;
-    });
-  };
 
-  const handleRemoveMeal = (index: number, refTitle: string) => {
+  const handleRemoveMeal = (userId: string, refTitle: string, mealId: string) => {
     Alert.alert('Remover', `Remover ${refTitle}?`, [
       {
         text: 'Sim',
         onPress: () => {
-          removeMealByIndex(index);
+          deleteMeal(userId, mealId)
+            .then(() => handleGetMeals());
           Alert.alert(`Item Removido!`);
         }
       },
@@ -65,45 +50,39 @@ export function Meals() {
     ])
   };
 
-  const removeFoodFromMeal = (mealTitle: string, foodName: string) => {
-    setMeals(prevMeals => {
-      return prevMeals.map(meal => {
-        if (meal.title === mealTitle) {
-          const updatedFoods = meal.foods.filter(food => food.name !== foodName);
-          return { ...meal, foods: updatedFoods };
-        }
-        return meal;
+  const handleAddFoodToMeal = (userId: string, mealId: string, newFood: Food): Promise<boolean> => {
+    return addFoodToMeal(userId, mealId, newFood)
+      .then(() => {
+        handleGetMeals();
+        return true;
+      })
+      .catch((error) => {
+        console.log(error);
+        return false;
       });
-    });
-  };
+  }
 
-  const addFoodToMeal = (mealTitle: string, newFood: Food) => {
-    setMeals(prevMeals => {
-      return prevMeals.map(meal => {
-        if (meal.title === mealTitle) {
-          const updatedFoods = [...meal.foods, newFood];
-          return { ...meal, foods: updatedFoods };
-        }
-        return meal;
+  const handleRemoveFoodFromMeal = (userId: string, mealId: string, food: Food): Promise<boolean> => {
+    return deleteFoodFromMeal(userId, mealId, food)
+      .then(() => {
+        handleGetMeals();
+        return true;
+      })
+      .catch((error) => {
+        console.log(error);
+        return false;
       });
-    });
-  };
+  }
 
-  const editFoodQuantityInMeal = (mealTitle: string, foodName: string, newQuantity: number) => {
-    setMeals(prevMeals => {
-      return prevMeals.map(meal => {
-        if (meal.title === mealTitle) {
-          const updatedFoods = meal.foods.map(food => {
-            if (food.name === foodName) {
-              return { ...food, quantity: newQuantity };
-            }
-            return food;
-          });
-          return { ...meal, foods: updatedFoods };
-        }
-        return meal;
-      });
-    });
+  const handleAddMeal = () => {
+    const newMeal: TMeals = { title: `Refeição ${meals.length + 1}`, foods: [] };
+    addMeal(currentUser?.uid!, newMeal)
+      .then(() => {
+        handleGetMeals();
+        return true;
+      })
+      .catch
+
   };
 
   return (
@@ -140,14 +119,16 @@ export function Meals() {
         </View>
         <View style={{ marginHorizontal: '6%', height: '70%' }}>
           <ScrollView style={styles.cardContainer} horizontal showsHorizontalScrollIndicator={false}>
-            {meals.length > 0 ?
-              (meals.map((meal, index) => (
-                <View key={index} style={{ flex: 1 }}>
-                  <Card key={index} meal={meal} onRemoveFood={removeFoodFromMeal} onAddFood={addFoodToMeal} onEditFood={editFoodQuantityInMeal}/>
+            {meals.length === 0 ?
+              (<Text style={[styles.textButton, { color: 'black', alignSelf: 'center', justifyContent: 'center' }]}> Nenhuma refeição cadastrada.</Text>)
+              :
+              (meals.map((meal) => (
+                <View key={meal.id} style={{ flex: 1 }}>
+                  <Card key={meal.id} meal={meal} onRemoveFood={handleRemoveFoodFromMeal} onAddFood={handleAddFoodToMeal} />
                   <View style={{ width: '80%', flexDirection: 'row', justifyContent: 'center', marginHorizontal: '7%' }}>
                     <TouchableOpacity
                       activeOpacity={.8}
-                      onPress={() => handleRemoveMeal(index, meal.title)}
+                      onPress={() => handleRemoveMeal(currentUser?.uid!, meal.title, meal.id!)}
                       style={{ height: 60, borderRadius: 26, width: '60%', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', backgroundColor: '#F44336' }}>
                       <Image source={removeIcon} style={[styles.myIcon, { width: 52, height: 52, left: -15, }]} />
                       <Text style={styles.textButton}>
@@ -156,8 +137,7 @@ export function Meals() {
                     </TouchableOpacity>
                   </View>
                 </View>)
-              )) :
-              (<Text style={[styles.textButton, { color: 'black', alignSelf: 'center', justifyContent: 'center' }]}> Nenhuma refeição cadastrada.</Text>)
+              ))
             }
           </ScrollView>
         </View>

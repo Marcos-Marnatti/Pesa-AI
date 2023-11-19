@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useRef, useState } from 'react';
+import React, { useContext, useRef } from 'react';
 import { View, TouchableOpacity, Image, Animated, Easing, Alert } from 'react-native';
 
 import mealIcon from "@assets/meal.png";
@@ -6,31 +6,39 @@ import addIcon from "@assets/add.png";
 import removeIcon from "@assets/remove.png";
 import editMealIcon from "@assets/editMeal.png";
 
+import { AuthenticatedUserContext } from '@context/AuthenticationContext';
+
 import { styles } from './styles';
 import { Food, TMeals, } from 'src/@types/Food';
 
-const Menu = ({ meal, onRemoveFood, onAddFood, onEditFood, titleSize, detailsOpacity }: { meal: TMeals, onRemoveFood: (mealTitle: string, foodName: string) => void, onAddFood: (mealTitle: string, newFood: Food) => void, onEditFood: (mealTitle: string, foodName: string, newQuantity: number) => void, titleSize: Animated.Value, detailsOpacity: Animated.Value }) => {
+const Menu = ({ meal, onRemoveFood, onAddFood, titleSize, detailsOpacity }: {
+  meal: TMeals,
+  onRemoveFood: (userId: string, mealId: string, foodData: Food) => Promise<boolean>,
+  onAddFood: (userId: string, mealId: string, newFood: Food) => Promise<boolean>,
+  titleSize: Animated.Value,
+  detailsOpacity: Animated.Value
+}) => {
+  const { currentUser } = useContext(AuthenticatedUserContext);
 
-  const handleRemoveFood = (mealTitle: string, foodName: string) => {
-    onRemoveFood(mealTitle, foodName);
-  };
-
-  const handleAddFood = (mealTitle: string,  // newFood: Food
-  ) => {
+  const handleRemoveFood = () => {
     const newFood: Food = {
       name: "Maçã",
       kcal: 50,
       quantity: 1,
       quantityUnit: "un",
     };
-    onAddFood(mealTitle, newFood);
+    onRemoveFood(currentUser?.uid!, meal.id!, newFood);
   };
 
-  const handleEditFoodQuantity = (mealTitle: string, foodName: string, newQuantity: number) => {
-    onEditFood(mealTitle, foodName, newQuantity);
+  const handleAddFood = () => {
+    const newFood: Food = {
+      name: "Maçã",
+      kcal: 50,
+      quantity: 1,
+      quantityUnit: "un",
+    };
+    onAddFood(currentUser?.uid!, meal.id!, newFood);
   };
-
-
 
   return (
     <View style={{ flex: 1, width: 300 }}>
@@ -41,11 +49,6 @@ const Menu = ({ meal, onRemoveFood, onAddFood, onEditFood, titleSize, detailsOpa
         meal.foods.map((food, index) => (
           <View key={index} >
             <View key={index} style={styles.foodRow}>
-              <TouchableOpacity
-                onPress={() => handleEditFoodQuantity(meal.title, food.name, food.quantity + 1)}
-                style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                <Animated.Image source={editMealIcon} style={[styles.myIcon, { width: 24, height: 24, opacity: detailsOpacity }]} />
-              </TouchableOpacity>
               <Animated.Text style={[styles.text, { fontSize: 18, opacity: detailsOpacity }]}>
                 {food.name}
               </Animated.Text>
@@ -58,7 +61,7 @@ const Menu = ({ meal, onRemoveFood, onAddFood, onEditFood, titleSize, detailsOpa
                 </Animated.Text>
                 <TouchableOpacity
                   style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}
-                  onPress={() => handleRemoveFood(meal.title, food.name)}
+                  onPress={handleRemoveFood}
                 >
                   <Animated.Image source={removeIcon} style={[styles.myIcon, { width: 24, height: 24, opacity: detailsOpacity }]} />
                 </TouchableOpacity>
@@ -69,7 +72,7 @@ const Menu = ({ meal, onRemoveFood, onAddFood, onEditFood, titleSize, detailsOpa
         ))
       }
       <TouchableOpacity
-        onPress={() => handleAddFood(meal.title)}
+        onPress={handleAddFood}
         style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 5 }}>
         <Animated.Image source={addIcon} style={[styles.myIcon, { width: 42, height: 42, opacity: detailsOpacity }]} />
       </TouchableOpacity>
@@ -78,7 +81,11 @@ const Menu = ({ meal, onRemoveFood, onAddFood, onEditFood, titleSize, detailsOpa
 };
 
 
-export function Card({ meal, onRemoveFood, onAddFood, onEditFood }: { meal: TMeals, onRemoveFood: (mealTitle: string, foodName: string) => void, onAddFood: (mealTitle: string, newFood: Food) => void, onEditFood: (mealTitle: string, foodName: string, newQuantity: number) => void }) {
+export function Card({ meal, onRemoveFood, onAddFood }: {
+  meal: TMeals,
+  onRemoveFood: (userId: string, mealId: string, foodData: Food) => Promise<boolean>,
+  onAddFood: (userId: string, mealId: string, newFood: Food) => Promise<boolean>,
+}) {
   const cardImageContainerSize = useRef(new Animated.Value(350)).current;
   const cardImageContainerBorder = useRef(new Animated.Value(20)).current;
   const cardImageContainerTop = useRef(new Animated.Value(0)).current;
@@ -137,7 +144,7 @@ export function Card({ meal, onRemoveFood, onAddFood, onEditFood }: { meal: TMea
         }]}>
           <Image source={mealIcon} style={styles.cardImage} />
         </Animated.View>
-        <Menu meal={meal} onRemoveFood={onRemoveFood} onAddFood={onAddFood} onEditFood={onEditFood} titleSize={titleSize} detailsOpacity={detailsOpacity} />
+        <Menu meal={meal} onRemoveFood={onRemoveFood} onAddFood={onAddFood} titleSize={titleSize} detailsOpacity={detailsOpacity} />
       </TouchableOpacity>
     </View>
   );

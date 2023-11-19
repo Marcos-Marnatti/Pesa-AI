@@ -1,4 +1,5 @@
 export type Food = {
+  id?: string;
   name: string;
   kcal: number;
   quantity: number;
@@ -6,6 +7,7 @@ export type Food = {
 };
 
 export type TMeals = {
+  id?: string;
   title: string;
   foods: Food[];
 };

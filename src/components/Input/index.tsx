@@ -40,7 +40,7 @@ const Input = ({ selectLabel, selectPlaceHolder, onSelectedValue, data, icon, co
           }}
           placeholder={selectPlaceHolder}
           placeholderTextColor={placeHolderColor}
-          keyboardType="decimal-pad"
+          keyboardType="number-pad"
           autoCapitalize="none"
           value={data.toString()}
           textContentType="none"

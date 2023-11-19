@@ -28,7 +28,7 @@ export function Home() {
           <DietBanner navigation={navigation} />
         </View>
         <View style={styles.dietScreen}>
-          <DietHistoric />
+          <DietHistoric navigation={navigation} />
         </View>
         <View style={{ height: 25, width: '90%', borderBottomWidth: 1, borderBottomColor: '#DFD8C8', alignSelf: 'center' }} />
         <View style={styles.caloriesContainer}>

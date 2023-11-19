@@ -6,7 +6,7 @@ import greenBanner from "@assets/banner_green.jpg"
 import healthDiet3D from "@assets/healthDiet.png";
 import fire from "@assets/fire.png";
 
-export function DietBanner({ navigation }: { navigation?: any}) {
+export function DietBanner({ navigation }: { navigation?: any }) {
   return (
     <>
       <TouchableOpacity

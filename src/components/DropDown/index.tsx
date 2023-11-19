@@ -37,11 +37,11 @@ const DropdownComponent = ({ selectLabel, selectPlaceHolder, isSearchable, onSel
 
   return (
     <View style={styles.container}>
-      {isFocus ? renderLabel() : <Text style={{ fontSize: 16, fontWeight: 'bold', color: color ? color : 'purple', marginBottom: 10, marginStart: 5 }}>{selectLabel}</Text>}
+      {isFocus ? renderLabel() : <Text style={{ fontSize: 16, fontFamily: 'Exo_800ExtraBold', fontWeight: 'bold', color: color ? color : 'purple', marginBottom: 10, marginStart: 5 }}>{selectLabel}</Text>}
       <Dropdown
         style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
         placeholderStyle={styles.placeholderStyle}
-        selectedTextStyle={styles.selectedTextStyle}
+        selectedTextStyle={[styles.selectedTextStyle]}
         inputSearchStyle={styles.inputSearchStyle}
         iconStyle={styles.iconStyle}
         data={data}

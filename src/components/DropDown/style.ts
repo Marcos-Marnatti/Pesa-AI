@@ -16,8 +16,9 @@ export const styles = StyleSheet.create({
     marginRight: 5,
   },
   label: {
+    fontFamily: 'Exo_400Regular',
     position: 'absolute',
-    backgroundColor: 'white',
+    backgroundColor: 'transparent',
     left: 22,
     top: 8,
     zIndex: 999,
@@ -25,9 +26,11 @@ export const styles = StyleSheet.create({
     fontSize: 14,
   },
   placeholderStyle: {
+    fontFamily: 'Exo_400Regular',
     fontSize: 16,
   },
   selectedTextStyle: {
+    fontFamily: 'Exo_400Regular',
     fontSize: 16,
   },
   iconStyle: {
@@ -35,6 +38,7 @@ export const styles = StyleSheet.create({
     height: 20,
   },
   inputSearchStyle: {
+    fontFamily: 'Exo_400Regular',
     height: 40,
     fontSize: 16,
   },

@@ -1,4 +1,7 @@
+import { useContext } from "react";
 import { View, Image, Text, ImageSourcePropType, ScrollView } from "react-native";
+
+import { AuthenticatedUserContext } from "@context/AuthenticationContext";
 
 import menu from "@assets/menu.png";
 import pesaAI from '@assets/pesaAIpng.png';
@@ -7,6 +10,7 @@ import verified from '@assets/verified.png';
 import { BottomTab } from "@components/BottomTab";
 
 import { styles } from './styles';
+import { handleSaveUserDiet } from "@services/reqFirestore";
 
 const ImageContainer = ({ image }: { image: ImageSourcePropType; }) => {
   return (
@@ -31,10 +35,13 @@ const HeaderTitle = () => {
 
 
 export function GenerateDietResponse({ route }: any) {
+  const { currentUser } = useContext(AuthenticatedUserContext);
   const response = route.params.response;
   const responseSplit = response.split('Refeição');
 
-  console.log('-------------\n' + responseSplit[1].split('-')[2] + '\n-------------');
+  handleSaveUserDiet(currentUser?.displayName!, currentUser?.uid!, response);
+
+  // console.log('-------------\n' + responseSplit[1].split('-')[2] + '\n-------------');
   return (
     <View style={{ flex: 1, }}>
       <View style={styles.screenContainer}>
@@ -56,8 +63,8 @@ export function GenerateDietResponse({ route }: any) {
           <View style={{ height: '2%', width: '90%', borderBottomWidth: 1, borderBottomColor: '#DFD8C8', alignSelf: 'center' }} />
           <View style={{ width: '90%', height: '90%', justifyContent: 'center', alignItems: 'center' }}>
             <ScrollView style={{ flex: 1 }}>
-              <View style={{marginTop: 20, backgroundColor: 'transparent', flex: 1,}}>
-                <Text style={[styles.text, {  fontSize: 16 }]}>{route.params.response}</Text>
+              <View style={{ marginTop: 20, backgroundColor: 'transparent', flex: 1, }}>
+                <Text style={[styles.text, { fontSize: 16 }]}>{route.params.response}</Text>
               </View>
             </ScrollView>
             <View style={{ height: '2%', width: '90%', borderBottomWidth: 1, borderBottomColor: '#DFD8C8', alignSelf: 'center' }} />

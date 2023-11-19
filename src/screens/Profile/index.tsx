@@ -20,10 +20,16 @@ import { StackTypes } from "src/@types/StackNavigator";
 import { handleTranslateGender, handleTranslateGoal, handleTranslatePhysicalActivity } from "./utils";
 
 import { styles } from './styles';
+import { handleGetUserDiet } from "@services/reqFirestore";
 
 export function Profile() {
   const navigation = useNavigation<StackTypes>();
   const { currentUser, userData, logout } = useContext(AuthenticatedUserContext);
+
+  async function handleFetchFirestore() {
+    const response = await handleGetUserDiet(currentUser?.uid!);
+    return response;
+  }
 
   return (
     <View style={styles.screenContainer}>
@@ -110,6 +116,18 @@ export function Profile() {
                 <TouchableOpacity onPress={logout} style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                   <Image source={exit} style={[styles.myIcon, { width: 32, height: 32 }]} />
                   <Text style={[styles.text, { fontSize: 26, marginStart: 15, color: 'red' }]}>Sair</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </View>
+
+        <View style={styles.statsContainer}>
+          <View style={styles.statsBox}>
+            <View style={{ width: '55%', flexDirection: 'row' }}>
+              <View style={styles.statsBox}>
+                <TouchableOpacity onPress={handleFetchFirestore} style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                  <Text style={[styles.text, { fontSize: 26, marginStart: 15, color: 'red' }]}>Dietas</Text>
                 </TouchableOpacity>
               </View>
             </View>

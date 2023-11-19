@@ -9,7 +9,7 @@ import { HeaderPesaAi } from "@components/HeaderPesaAi";
 import { BottomPesaAi } from "@components/BottomPesaAi";
 
 import { StackTypes } from "src/@types/StackNavigator";
-import { handleSignIn } from "../../services/reqFirebase";
+import { handleResetPassword, handleSignIn } from "../../services/reqFirebase";
 
 import { styles } from './styles';
 
@@ -25,6 +25,23 @@ export function SignIn() {
     const response = await handleSignIn({ email, password });
 
     return response;
+  }
+
+  async function onForgotPasswordHandle(email: string) {
+    if (email.length === 0) {
+      return Alert.alert("Campo E-mail vazio", "Preencha o campo E-mail.");
+    }
+
+    await handleResetPassword(email)
+      .then((response) => {
+        if (response === 'sucesso') {
+          return (
+            Alert.alert("Enviamos um e-mail para você redefinir sua senha.")
+          )
+        }
+      }).catch((error) => {
+        return Alert.alert("Erro desconhecido.")
+      })
   }
 
   return (
@@ -54,7 +71,8 @@ export function SignIn() {
               onChangeText={(text) => setPassword(text)}
             />
 
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={async () => await onForgotPasswordHandle(email)}>
               <Text style={styles.forgetText}> Esqueceu sua senha ?</Text>
             </TouchableOpacity>
           </View>

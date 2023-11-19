@@ -16,6 +16,7 @@ import { SignupAnamnese } from '@screens/SignUpAnamenese';
 import { Loading } from '@components/Loading';
 
 import { AuthenticatedUserContext } from '@context/AuthenticationContext';
+import { HistoricDiet } from '@screens/HistoricDiet';
 
 const Stack = createNativeStackNavigator();
 
@@ -41,6 +42,7 @@ export function StackNavigator() {
           <Stack.Screen name='Profile' component={Profile} />
           <Stack.Screen name='GerarDieta' component={GenerateDiet} />
           <Stack.Screen name='GerarDietaResposta' component={GenerateDietResponse} />
+          <Stack.Screen name='HistoricoDietas' component={HistoricDiet} />
         </Stack.Navigator>
       )}
     </NavigationContainer>

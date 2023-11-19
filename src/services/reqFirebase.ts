@@ -1,5 +1,5 @@
 import { auth } from "../config/firebase";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, AuthErrorCodes, AuthError } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, AuthErrorCodes, AuthError, sendEmailVerification, sendPasswordResetEmail } from "firebase/auth";
 import { UserService } from "src/@types/User";
 import axios from "axios";
 
@@ -35,6 +35,16 @@ export async function handleSignUp({ email, password }: { email: string; passwor
     });
 
   return result;
+}
+
+export async function handleResetPassword(email: string) {
+  const result = sendPasswordResetEmail(auth, email)
+    .then(() => 'sucesso')
+    .catch((error) => {
+      console.log(error)
+      return 'erro'
+    });
+    return result;
 }
 
 export async function handleSignIn({ email, password }: { email: string; password: string; }) {

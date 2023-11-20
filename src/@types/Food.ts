@@ -11,3 +11,13 @@ export type TMeals = {
   title: string;
   foods: Food[];
 };
+
+export type ApiFood = {
+  id?: number,
+  description: string,
+  foodGroup?: string,
+  cal: number,
+  protein: number,
+  carbohydrate: number,
+  fat: number,
+};

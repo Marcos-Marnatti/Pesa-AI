@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { View } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 
@@ -15,14 +15,13 @@ import { styles } from './styles';
 
 export function Home() {
   const navigation = useNavigation<StackTypes>();
-  const { currentUser, userData, logout } = useContext(AuthenticatedUserContext);
+  const { currentUser, logout } = useContext(AuthenticatedUserContext);
 
   return (
     <View style={styles.screenContainer}>
       <View style={styles.header}>
         <Header onPress={logout} userName={currentUser?.displayName!} />
       </View >
-
       <View style={styles.middleScreen}>
         <View style={styles.screen}>
           <DietBanner navigation={navigation} />
@@ -32,7 +31,7 @@ export function Home() {
         </View>
         <View style={{ height: 25, width: '90%', borderBottomWidth: 1, borderBottomColor: '#DFD8C8', alignSelf: 'center' }} />
         <View style={styles.caloriesContainer}>
-          <CaloriesCount calories={userData?.basalMetabolicRate!} />
+          <CaloriesCount />
         </View>
       </View>
       <BottomTab />

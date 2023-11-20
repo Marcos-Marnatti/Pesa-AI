@@ -1,5 +1,5 @@
-import React, { useContext, useRef } from 'react';
-import { View, TouchableOpacity, Image, Animated, Easing, Alert } from 'react-native';
+import React, { useContext, useRef, useState } from 'react';
+import { View, TouchableOpacity, Image, Animated, Easing, Alert, Button } from 'react-native';
 
 import mealIcon from "@assets/meal.png";
 import addIcon from "@assets/add.png";
@@ -10,6 +10,7 @@ import { AuthenticatedUserContext } from '@context/AuthenticationContext';
 
 import { styles } from './styles';
 import { Food, TMeals, } from 'src/@types/Food';
+import FoodSearchPopup from '@components/FoodSearchPopup';
 
 const Menu = ({ meal, onRemoveFood, onAddFood, titleSize, detailsOpacity }: {
   meal: TMeals,
@@ -20,24 +21,18 @@ const Menu = ({ meal, onRemoveFood, onAddFood, titleSize, detailsOpacity }: {
 }) => {
   const { currentUser } = useContext(AuthenticatedUserContext);
 
-  const handleRemoveFood = () => {
-    const newFood: Food = {
-      name: "Maçã",
-      kcal: 50,
-      quantity: 1,
-      quantityUnit: "un",
-    };
-    onRemoveFood(currentUser?.uid!, meal.id!, newFood);
+  const [isPopupVisible, setPopupVisible] = useState(false);
+
+  const openPopup = () => {
+    setPopupVisible(true);
   };
 
-  const handleAddFood = () => {
-    const newFood: Food = {
-      name: "Maçã",
-      kcal: 50,
-      quantity: 1,
-      quantityUnit: "un",
-    };
-    onAddFood(currentUser?.uid!, meal.id!, newFood);
+  const closePopup = () => {
+    setPopupVisible(false);
+  };
+
+  const handleRemoveFood = (newFood: Food) => {
+    onRemoveFood(currentUser?.uid!, meal.id!, newFood);
   };
 
   return (
@@ -47,34 +42,52 @@ const Menu = ({ meal, onRemoveFood, onAddFood, titleSize, detailsOpacity }: {
       </Animated.Text>
       {
         meal.foods.map((food, index) => (
-          <View key={index} >
+          <View key={index}>
             <View key={index} style={styles.foodRow}>
-              <Animated.Text style={[styles.text, { fontSize: 18, opacity: detailsOpacity }]}>
-                {food.name}
-              </Animated.Text>
-              <View style={[styles.foodRow, { marginTop: 0, width: '55%' }]}>
-                <Animated.Text style={[styles.text, styles.subText, { fontSize: 14, opacity: detailsOpacity }]}>
+              <View style={{ flexDirection: 'row', width: '50%' }}>
+                <Animated.Text style={[styles.text, { fontSize: 12, opacity: detailsOpacity }]}>
+                  {food.name}
+                </Animated.Text>
+              </View>
+              <View style={{ flexDirection: 'row', width: '15%' }}>
+                <Animated.Text style={[styles.text, styles.subText, { marginLeft: 10, fontSize: 12, opacity: detailsOpacity }]}>
                   {food.quantity}{food.quantityUnit}
                 </Animated.Text>
-                <Animated.Text style={[styles.text, { fontSize: 18, opacity: detailsOpacity }]}>
+              </View>
+
+              <View style={{ flexDirection: 'row', width: '25%', justifyContent: 'flex-end'  }}>
+                <Animated.Text style={[styles.text, { fontSize: 12, opacity: detailsOpacity }]}>
                   {food.kcal} Kcal
                 </Animated.Text>
+              </View>
+              <View style={{ flexDirection: 'row', width: '10%', justifyContent: 'flex-end' }}>
                 <TouchableOpacity
                   style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}
-                  onPress={handleRemoveFood}
+                  onPress={() => {
+                    const newFood: Food = {
+                      name: food.name!,
+                      kcal: food.kcal!,
+                      quantity: food.quantity!,
+                      quantityUnit: food.quantityUnit!,
+                    };
+                    handleRemoveFood(newFood);
+                  }}
                 >
-                  <Animated.Image source={removeIcon} style={[styles.myIcon, { width: 24, height: 24, opacity: detailsOpacity }]} />
+                  <Animated.Image source={removeIcon} style={[styles.myIcon, { width: 18, height: 18, opacity: detailsOpacity }]} />
                 </TouchableOpacity>
               </View>
+
             </View>
             <Animated.View style={{ height: 5, borderBottomWidth: 1, borderBottomColor: '#DFD8C8', opacity: detailsOpacity }} />
           </View>
         ))
       }
       <TouchableOpacity
-        onPress={handleAddFood}
+        // onPress={handleAddFood}
+        onPress={openPopup}
         style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 5 }}>
         <Animated.Image source={addIcon} style={[styles.myIcon, { width: 42, height: 42, opacity: detailsOpacity }]} />
+        <FoodSearchPopup isVisible={isPopupVisible} onClose={closePopup} onAddFood={onAddFood} meal={meal} />
       </TouchableOpacity>
     </View >
   )

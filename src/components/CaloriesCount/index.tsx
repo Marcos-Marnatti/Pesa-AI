@@ -1,35 +1,20 @@
-import { useContext, useEffect, useState } from "react";
 import { Image, Text, View } from "react-native";
 import * as Progress from 'react-native-progress';
 
 import caloriesIcon from "@assets/calories.png";
 
-import { AuthenticatedUserContext } from "@context/AuthenticationContext";
-import { fetchUserMeals } from "@services/reqFirestore";
-
 import { styles } from "./styles";
 
-export function CaloriesCount() {
-  const { currentUser, userData } = useContext(AuthenticatedUserContext);
-  const [consumedCalories, setConsumedCalories] = useState(0);
-  const basalMetabolicRate = Math.trunc(userData?.basalMetabolicRate!);
-  const percentageTotalCalories = (consumedCalories / basalMetabolicRate);
+type Props = {
+  basalMetabolicRate: number,
+  consumedProtCalories: number,
+  consumedCarbCalories: number,
+  consumedFatCalories: number,
+  consumedCalories: number,
+};
 
-  const handleMacros = async () => {
-    const response = await fetchUserMeals(currentUser?.uid!);
-    let caloriesSum = 0;
-
-    response.map((meal) => {
-      meal.foods.map((food) => {
-        caloriesSum += food.kcal;
-      });
-    });
-    setConsumedCalories(caloriesSum);
-  };
-
-  useEffect(() => {
-    handleMacros();
-  }, [consumedCalories])
+export function CaloriesCount({ basalMetabolicRate, consumedProtCalories, consumedCarbCalories, consumedFatCalories, consumedCalories }: Props) {
+  Number.isNaN(basalMetabolicRate) ? basalMetabolicRate = Math.trunc(3000) : basalMetabolicRate = basalMetabolicRate;
 
   return (
     <>
@@ -53,15 +38,15 @@ export function CaloriesCount() {
           <Text style={[styles.macrosText, { fontFamily: 'Exo_800ExtraBold' }]}>Total</Text>
         </View>
         <View style={{ marginStart: 20, flexDirection: 'column', justifyContent: 'space-evenly' }}>
-          <Progress.Bar progress={0.5} width={150} color={'#24B3B3'} />
-          <Progress.Bar progress={0.8} width={150} style={{ top: 5 }} color={'#2EE6A8'} />
-          <Progress.Bar progress={0.5} width={150} style={{ top: 10 }} color={'#FFCD69'} />
-          <Progress.Bar progress={0.5} width={150} style={{ top: 15 }} color={'#FF7B79'} />
+          <Progress.Bar progress={consumedProtCalories / basalMetabolicRate} width={150} color={'#24B3B3'} />
+          <Progress.Bar progress={consumedCarbCalories / basalMetabolicRate} width={150} style={{ top: 5 }} color={'#2EE6A8'} />
+          <Progress.Bar progress={consumedFatCalories / basalMetabolicRate} width={150} style={{ top: 10 }} color={'#FFCD69'} />
+          <Progress.Bar progress={consumedCalories / basalMetabolicRate} width={150} style={{ top: 15 }} color={'#FF7B79'} />
         </View>
         <View style={{ flexDirection: 'column', justifyContent: 'space-evenly', alignItems: 'flex-end', marginLeft: 30 }}>
-          <Text style={styles.macrosText}>{(3000 / 100) * 20} / {((basalMetabolicRate / 100) * 25).toFixed(0)} Kcal</Text>
-          <Text style={styles.macrosText}>{(3000 / 100) * 40} / {((basalMetabolicRate / 100) * 50).toFixed(0)} Kcal</Text>
-          <Text style={styles.macrosText}>{(3000 / 100) * 20} / {((basalMetabolicRate / 100) * 25).toFixed(0)} Kcal</Text>
+          <Text style={styles.macrosText}>{consumedProtCalories.toFixed(0)} / {((basalMetabolicRate / 100) * 25).toFixed(0)} Kcal</Text>
+          <Text style={styles.macrosText}>{consumedCarbCalories.toFixed(0)}  / {((basalMetabolicRate / 100) * 50).toFixed(0)} Kcal</Text>
+          <Text style={styles.macrosText}>{consumedFatCalories.toFixed(0)}  / {((basalMetabolicRate / 100) * 25).toFixed(0)} Kcal</Text>
           <Text style={[styles.macrosText, { fontFamily: 'Exo_800ExtraBold' }]}>{consumedCalories.toFixed(0)} / {basalMetabolicRate} Kcal</Text>
         </View>
       </View>

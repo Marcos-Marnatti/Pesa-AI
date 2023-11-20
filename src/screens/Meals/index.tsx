@@ -20,10 +20,9 @@ export function Meals() {
   const navigation = useNavigation<StackTypes>();
   const [meals, setMeals] = useState<TMeals[]>([]);
 
-  const { currentUser } = useContext(AuthenticatedUserContext);
+  const { currentUser, isValueChanged, valueChanged } = useContext(AuthenticatedUserContext);
 
   async function handleGetMeals() {
-    console.log('entrei')
     await fetchUserMeals(currentUser?.uid!)
       .then((response) => setMeals(response));
   };
@@ -39,7 +38,10 @@ export function Meals() {
         text: 'Sim',
         onPress: () => {
           deleteMeal(userId, mealId)
-            .then(() => handleGetMeals());
+            .then(() => {
+              handleGetMeals();
+              isValueChanged(!valueChanged);
+            });
           Alert.alert(`Item Removido!`);
         }
       },
@@ -54,6 +56,7 @@ export function Meals() {
     return addFoodToMeal(userId, mealId, newFood)
       .then(() => {
         handleGetMeals();
+        isValueChanged(!valueChanged);
         return true;
       })
       .catch((error) => {
@@ -66,6 +69,7 @@ export function Meals() {
     return deleteFoodFromMeal(userId, mealId, food)
       .then(() => {
         handleGetMeals();
+        isValueChanged(!valueChanged);
         return true;
       })
       .catch((error) => {

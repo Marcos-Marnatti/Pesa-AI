@@ -67,9 +67,13 @@ const Menu = ({ meal, onRemoveFood, onAddFood, titleSize, detailsOpacity }: {
                     const newFood: Food = {
                       name: food.name!,
                       kcal: food.kcal!,
+                      protein: food.protein!,
+                      carbohydrate: food.carbohydrate!,
+                      fat: food.fat!,
                       quantity: food.quantity!,
-                      quantityUnit: food.quantityUnit!,
+                      quantityUnit: "un",
                     };
+                    console.log(newFood);
                     handleRemoveFood(newFood);
                   }}
                 >

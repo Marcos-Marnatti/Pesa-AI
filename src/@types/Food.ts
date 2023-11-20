@@ -2,6 +2,9 @@ export type Food = {
   id?: string;
   name: string;
   kcal: number;
+  protein?: number,
+  carbohydrate?: number,
+  fat?: number,
   quantity: number;
   quantityUnit: string;
 };

@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { View, Text, TextInput, Modal, Button, FlatList, TouchableOpacity, Image, Alert } from 'react-native';
+import NumericInput from 'react-native-numeric-input';
 import axios from 'axios';
 
 import addIcon from "@assets/add.png";
@@ -14,6 +15,7 @@ import { AuthenticatedUserContext } from '@context/AuthenticationContext';
 const FoodSearchPopup = ({ isVisible, onClose, onAddFood, meal }: { isVisible: boolean, onClose: () => void, onAddFood: (userId: string, mealId: string, newFood: Food) => Promise<boolean>, meal: TMeals }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  const [qtdValue, setQtdValue] = useState(1);
   const { currentUser } = useContext(AuthenticatedUserContext);
 
   const handleSearch = async () => {
@@ -26,7 +28,7 @@ const FoodSearchPopup = ({ isVisible, onClose, onAddFood, meal }: { isVisible: b
 
     axios.request(config)
       .then((response) => {
-        console.log(JSON.stringify(response.data));
+        // console.log(JSON.stringify(response.data));
         if (response.data.length === 0) {
           return Alert.alert("Alimento não encontrado.");
         }
@@ -59,13 +61,14 @@ const FoodSearchPopup = ({ isVisible, onClose, onAddFood, meal }: { isVisible: b
             />
             <TouchableOpacity
               activeOpacity={.7}
-            onPress={handleSearch}
+              onPress={handleSearch}
             >
               <View style={{ width: '150%', justifyContent: 'flex-end', right: 50, top: 5, borderLeftWidth: 1 }}>
                 <Image source={sentIcon} style={{ width: 28, height: 28, alignSelf: 'center' }} />
               </View>
             </TouchableOpacity>
           </View>
+          <Text style={{ fontFamily: 'Exo_800ExtraBold', fontSize: 16 }}>Lembre-se: <Text style={{ fontFamily: 'Exo_400Regular' }}> 1 UN = 100g </Text> </Text>
         </View >
         <View style={styles.middleScreen}>
           <FlatList
@@ -81,16 +84,33 @@ const FoodSearchPopup = ({ isVisible, onClose, onAddFood, meal }: { isVisible: b
                     <Text style={{ fontFamily: 'Exo_800ExtraBold', fontSize: 12 }}>Proteína: <Text style={{ fontFamily: 'Exo_400Regular' }}>{item.protein}</Text></Text>
                     <Text style={{ fontFamily: 'Exo_800ExtraBold', fontSize: 12 }}>Carboidrato: <Text style={{ fontFamily: 'Exo_400Regular' }}>{item.carbohydrate}</Text></Text>
                     <Text style={{ fontFamily: 'Exo_800ExtraBold', fontSize: 12 }}>Gordura: <Text style={{ fontFamily: 'Exo_400Regular' }}>{item.fat}</Text></Text>
-                  </View>
-                  <View>
+                    <Text style={{ fontFamily: 'Exo_800ExtraBold', fontSize: 12 }}>Quantidade:</Text>
+                    <NumericInput
+                      value={qtdValue}
+                      onChange={setQtdValue}
+                      onLimitReached={(isMax, msg) => console.log(isMax, msg)}
+                      totalWidth={90}
+                      totalHeight={30}
+                      iconSize={20}
+                      step={0.5}
+                      valueType='real'
+                      rounded
+                      textColor='black'
+                      //@ts-ignore
+                      iconStyle={{ color: 'white' }}
+                      rightButtonBackgroundColor='#24B3B3'
+                      leftButtonBackgroundColor='#2EE6A8' />
                   </View>
                   <TouchableOpacity
                     onPress={() => {
                       const newFood: Food = {
                         name: item.description!,
-                        kcal: item.cal!,
-                        quantity: 100,
-                        quantityUnit: "g",
+                        kcal: item.cal! * qtdValue,
+                        protein: item.protein! * qtdValue,
+                        carbohydrate: item.carbohydrate! * qtdValue,
+                        fat: item.fat! * qtdValue,
+                        quantity: 1 * qtdValue,
+                        quantityUnit: "un",
                       };
                       handleAddFood(newFood);
                       return (

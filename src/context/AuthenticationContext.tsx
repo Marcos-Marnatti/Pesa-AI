@@ -14,6 +14,7 @@ const AuthenticatedUserProvider = ({ children }: { children: React.ReactNode }) 
   const [currentUser, setCurrentUser] = useState<firebase.UserInfo | null>(null);
   const [userData, setUserData] = useState<UserService>();
   const [isLoading, setIsLoading] = useState(false);
+  const [ valueChanged, isValueChanged] = useState(false);
 
 
   useEffect(() => {
@@ -50,7 +51,7 @@ const AuthenticatedUserProvider = ({ children }: { children: React.ReactNode }) 
   };
 
   return (
-    <AuthenticatedUserContext.Provider value={{ currentUser, userData, isLoading, logout }}>
+    <AuthenticatedUserContext.Provider value={{ currentUser, userData, isLoading, logout, isValueChanged, valueChanged }}>
       {children}
     </AuthenticatedUserContext.Provider>
   );

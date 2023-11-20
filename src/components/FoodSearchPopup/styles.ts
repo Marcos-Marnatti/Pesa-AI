@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
     backgroundColor: '#EDEDED',
   },
   header: {
-    height: '21%',
+    height: '22%',
     paddingHorizontal: 10,
     backgroundColor: '#EDEDED',
     justifyContent: 'center',

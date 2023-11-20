@@ -17,6 +17,8 @@ export type AuthenticatedUserContextType = {
   currentUser: firebase.UserInfo | null;
   userData: UserService | undefined;
   isLoading: boolean;
+  valueChanged: boolean;
+  isValueChanged: (value: boolean) => void;
   logout: () => void;
 };
 

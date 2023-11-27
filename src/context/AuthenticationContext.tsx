@@ -38,13 +38,14 @@ const AuthenticatedUserProvider = ({ children }: { children: React.ReactNode }) 
       }
     });
 
-  }, [currentUser, userData]);
+  }, [currentUser, valueChanged]);
 
 
   async function logout() {
     try {
       auth.signOut();
       setCurrentUser(null);
+      setUserData(undefined);
     } catch (error) {
       console.error(error);
     }

@@ -4,7 +4,7 @@ import { styles } from "./styles";
 
 import { Icons } from "@components/Icons";
 
-import avatar from "@assets/avatar-image.png"
+import avatar from "@assets/avatar.png"
 import logout from "@assets/logout.png"
 
 const currentDay = new Date(Date.now()).toLocaleString('pt-br', { dateStyle: 'full' });
@@ -12,7 +12,12 @@ const currentDay = new Date(Date.now()).toLocaleString('pt-br', { dateStyle: 'fu
 const ImageContainer = ({ image }: { image: ImageSourcePropType; }) => {
   return (
     <View style={styles.avatarContainer}>
-      <Image source={image} style={styles.avatar} />
+      {image ? ( 
+        //@ts-ignore
+         <Image source={{ uri: image }} style={styles.avatar} />
+      ) : (
+        <Image source={avatar} style={styles.avatar} />
+      )}
     </View>
   )
 };
@@ -27,7 +32,7 @@ const HeaderTitle = ({ username }: { username: string; }) => {
 };
 
 
-export function Header({ onPress, userName }: { onPress?: () => void, userName: string; }) {
+export function Header({ onPress, userName, avatar }: { onPress?: () => void, userName: string, avatar: any }) {
   return (
     <>
       {

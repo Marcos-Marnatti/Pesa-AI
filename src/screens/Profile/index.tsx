@@ -1,6 +1,8 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { View, Image, Text, TouchableOpacity } from "react-native";
 import { useNavigation } from '@react-navigation/native';
+import { updateProfile, getAuth } from 'firebase/auth';
+import * as ImagePicker from 'expo-image-picker';
 
 import { AuthenticatedUserContext } from "@context/AuthenticationContext";
 
@@ -11,6 +13,7 @@ import heightIcon from "@assets/height.png";
 import weightIcon from "@assets/weight.png";
 import birthIcon from "@assets/birthDate.png";
 import edit from "@assets/edit.png";
+import editAvatar from "@assets/editarAvatar.png";
 import exit from "@assets/exit.png";
 
 import { Header } from "@components/Header";
@@ -20,15 +23,58 @@ import { StackTypes } from "src/@types/StackNavigator";
 import { handleTranslateGender, handleTranslateGoal, handleTranslatePhysicalActivity } from "./utils";
 
 import { styles } from './styles';
+import { storage } from "@config/firebase";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 export function Profile() {
-  const navigation = useNavigation<StackTypes>();
-  const { currentUser, userData, logout } = useContext(AuthenticatedUserContext);
+  const { currentUser, userData, logout, isValueChanged, valueChanged } = useContext(AuthenticatedUserContext);
+
+  const updateUserPhoto = async (image: string) => {
+    try {
+      const timestamp = Date.now();
+      const imageName = `avatar_${currentUser?.uid}_${timestamp}.jpg`;
+
+      const response = await fetch(image);
+      const blob = await response.blob();
+      const storageRef = ref(storage, imageName);
+      const snapshot = await uploadBytes(storageRef, blob);
+      const url = await getDownloadURL(snapshot.ref);
+
+      const user = getAuth().currentUser;
+      if (user) {
+        await updateProfile(user, {
+          photoURL: image,
+        });
+      }
+      isValueChanged(!valueChanged);
+      return url;
+    } catch (error) {
+      console.error('Error updating user photo: ', error);
+      throw error;
+    }
+  };
+
+  const handleImagePicker = async () => {
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+
+      if (!result.canceled) {
+        await updateUserPhoto(result.assets[0].uri);
+      }
+    } catch (error) {
+      console.error('Error picking image: ', error);
+    }
+  };
 
   return (
     <View style={styles.screenContainer}>
       <View style={styles.header}>
-        <Header userName={currentUser?.displayName!} />
+        <Header userName={currentUser?.displayName!} avatar={currentUser?.photoURL} />
       </View >
 
       <View style={styles.middleScreen}>
@@ -97,12 +143,28 @@ export function Profile() {
               <View style={styles.statsBox}>
                 <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                   <Image source={edit} style={[styles.myIcon, { width: 32, height: 32 }]} />
-                  <Text style={[styles.text, { fontSize: 26, marginStart: 15, }]}>Editar Perfil</Text>
+                  <Text style={[styles.text, { fontSize: 26, marginStart: 15, }]}>Editar nome</Text>
                 </TouchableOpacity>
               </View>
             </View>
           </View>
         </View>
+
+        <View style={styles.statsContainer}>
+          <View style={styles.statsBox}>
+            <View style={{ width: '55%', flexDirection: 'row' }}>
+              <View style={styles.statsBox}>
+                <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}
+                  onPress={handleImagePicker}>
+                  <Image source={editAvatar} style={[styles.myIcon, { width: 32, height: 32 }]} />
+                  <Text style={[styles.text, { fontSize: 26, marginStart: 15, }]}>Editar avatar</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </View>
+
+
         <View style={styles.statsContainer}>
           <View style={styles.statsBox}>
             <View style={{ width: '55%', flexDirection: 'row' }}>

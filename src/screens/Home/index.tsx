@@ -52,7 +52,7 @@ export function Home() {
   return (
     <View style={styles.screenContainer}>
       <View style={styles.header}>
-        <Header onPress={logout} userName={currentUser?.displayName!} />
+        <Header onPress={logout} userName={currentUser?.displayName!} avatar={currentUser?.photoURL} />
       </View >
       <View style={styles.middleScreen}>
         <View style={styles.screen}>

@@ -1,6 +1,5 @@
 import { useContext, useState } from "react";
-import { View, Image, Text, TouchableOpacity } from "react-native";
-import { useNavigation } from '@react-navigation/native';
+import { View, Image, Text, TouchableOpacity, Alert, TextInput } from "react-native";
 import { updateProfile, getAuth } from 'firebase/auth';
 import * as ImagePicker from 'expo-image-picker';
 
@@ -19,7 +18,6 @@ import exit from "@assets/exit.png";
 import { Header } from "@components/Header";
 import { BottomTab } from "@components/BottomTab";
 
-import { StackTypes } from "src/@types/StackNavigator";
 import { handleTranslateGender, handleTranslateGoal, handleTranslatePhysicalActivity } from "./utils";
 
 import { styles } from './styles';
@@ -27,7 +25,10 @@ import { storage } from "@config/firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 export function Profile() {
+  const [newName, setNewName] = useState('');
   const { currentUser, userData, logout, isValueChanged, valueChanged } = useContext(AuthenticatedUserContext);
+  const user = getAuth().currentUser;
+  const nameRegex = new RegExp('^[a-zA-Z ]+$');
 
   const updateUserPhoto = async (image: string) => {
     try {
@@ -40,7 +41,6 @@ export function Profile() {
       const snapshot = await uploadBytes(storageRef, blob);
       const url = await getDownloadURL(snapshot.ref);
 
-      const user = getAuth().currentUser;
       if (user) {
         await updateProfile(user, {
           photoURL: image,
@@ -70,6 +70,29 @@ export function Profile() {
       console.error('Error picking image: ', error);
     }
   };
+
+  async function updateDisplayName(newDisplayName: string) {
+    try {
+      if (user) {
+        if (!nameRegex.test(newDisplayName)) {
+          Alert.alert("Nome inválido", "Preencha o campo corretamente.");
+          return false;
+        }
+        await updateProfile(user, {
+          displayName: newDisplayName
+        });
+
+        isValueChanged(!valueChanged);
+        setNewName('');
+        return Alert.alert('Sucesso', 'Seu nome foi atualizado com sucesso!');
+      } else {
+        console.error('Nenhum usuário está autenticado.');
+      }
+    } catch (error) {
+      console.error('Erro ao atualizar o displayName:', error);
+    }
+  }
+
 
   return (
     <View style={styles.screenContainer}>
@@ -141,9 +164,10 @@ export function Profile() {
           <View style={styles.statsBox}>
             <View style={{ width: '55%', flexDirection: 'row' }}>
               <View style={styles.statsBox}>
-                <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                  <Image source={edit} style={[styles.myIcon, { width: 32, height: 32 }]} />
-                  <Text style={[styles.text, { fontSize: 26, marginStart: 15, }]}>Editar nome</Text>
+                <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}
+                  onPress={handleImagePicker}>
+                  <Image source={editAvatar} style={[styles.myIcon, { width: 32, height: 32 }]} />
+                  <Text style={[styles.text, { fontSize: 26, marginStart: 15, }]}>Editar avatar</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -155,15 +179,39 @@ export function Profile() {
             <View style={{ width: '55%', flexDirection: 'row' }}>
               <View style={styles.statsBox}>
                 <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}
-                  onPress={handleImagePicker}>
-                  <Image source={editAvatar} style={[styles.myIcon, { width: 32, height: 32 }]} />
-                  <Text style={[styles.text, { fontSize: 26, marginStart: 15, }]}>Editar avatar</Text>
+                  onPress={() => updateDisplayName(newName)}
+                >
+                  <View style={{ flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                      <Image source={edit} style={[styles.myIcon, { width: 32, height: 32 }]} />
+                      <Text style={[styles.text, { fontSize: 26, marginStart: 15, }]}>Editar nome</Text>
+                    </View>
+                    <TextInput
+                      style={{
+                        marginTop: 20,
+                        height: 50,
+                        left: 10,
+                        width: '100%',
+                        borderColor: 'gray',
+                        borderWidth: 0.5,
+                        borderRadius: 8,
+                        paddingHorizontal: 8,
+                        paddingStart: 45,
+                        fontSize: 16,
+                      }}
+                      placeholder={'Atualize seu nome...'}
+                      placeholderTextColor={'#52575D'}
+                      autoCapitalize="words"
+                      value={newName.toString()}
+                      textContentType="name"
+                      onChangeText={setNewName}
+                    />
+                  </View>
                 </TouchableOpacity>
               </View>
             </View>
           </View>
         </View>
-
 
         <View style={styles.statsContainer}>
           <View style={styles.statsBox}>

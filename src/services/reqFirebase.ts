@@ -78,7 +78,7 @@ export async function handleSignUpAPI({ name, email, sex, password, age, size, w
   const config = {
     method: 'post',
     maxBodyLength: Infinity,
-    url: 'http://192.168.0.18:8080/user',
+    url: 'http://192.168.0.18:9090/user',
     headers: {
       'Content-Type': 'application/json'
     },
@@ -103,7 +103,7 @@ export async function handleGetUserData(email: string) {
   const config = {
     method: 'get',
     maxBodyLength: Infinity,
-    url: `http://192.168.0.18:8080/user?email=${email}`,
+    url: `http://192.168.0.18:9090/user?email=${email}`,
     headers: {}
   };
 

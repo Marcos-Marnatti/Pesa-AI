@@ -17,11 +17,18 @@ export function SignIn() {
   const navigation = useNavigation<StackTypes>();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const emailRegex = new RegExp('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+[a-zA-Z0-9-.]');
 
   async function onSignInHandle() {
     if (email.length === 0 || password.length === 0) {
       return Alert.alert("Campo vazio", "Preencha todos os campos.");
     }
+
+    if (!emailRegex.test(email)) {
+      Alert.alert("Email inválido", "Preencha o campo corretamente.");
+      return false;
+    }
+
     const response = await handleSignIn({ email, password });
 
     return response;

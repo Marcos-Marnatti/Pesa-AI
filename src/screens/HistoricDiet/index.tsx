@@ -36,7 +36,7 @@ export function HistoricDiet() {
         dietData.push({ label: `Dieta ${index + 1}`, value: diet.diet });
       })
 
-      console.log(dietData.length);
+      // console.log(dietData.length);
     };
     handleGetDiets();
   }, [diet]);

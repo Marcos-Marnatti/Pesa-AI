@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
+import { useContext, useState } from "react";
+import { View, Text, TouchableOpacity, Image, ScrollView, Alert } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 
 import DropdownComponent from "@components/DropDown";
@@ -17,48 +17,86 @@ import anamnese from "@assets/anamnese.jpg";
 import { StackTypes } from "src/@types/StackNavigator";
 
 import { styles } from './styles';
+import { AuthenticatedUserContext } from "@context/AuthenticationContext";
+import { handleUpdateUser } from "@services/reqFirebase";
 
 export function Anamnese() {
   const navigation = useNavigation<StackTypes>();
-  const [sex, setSext] = useState<string>('');
-  const [size, setSize] = useState<number>(0);
-  const [weight, setWeight] = useState<number>(0);
-  const [age, setAge] = useState<number>(0);
-  const [weightGoal, setWeightGoal] = useState<string>('');
-  const [physicalActivity, setPhysicalActivity] = useState<string>('');
+
+  const { userData, valueChanged } = useContext(AuthenticatedUserContext);
+
+
+  const [sex, setSext] = useState<string>(userData?.sex!);
+  const [size, setSize] = useState<number>(userData?.size!);
+  const [weight, setWeight] = useState<number>(userData?.weight!);
+  const [age, setAge] = useState<number>(userData?.age!);
+  const [weightGoal, setWeightGoal] = useState<string>(userData?.weightGoal!);
+  const [physicalActivity, setPhysicalActivity] = useState<string>(userData?.physicalActivity!);
+
+  async function onUpdateAnamneseHandle() {
+    if (sex.length === 0 || size === 0 || weight === 0 || age === 0 || weightGoal.length === 0 || physicalActivity.length === 0) {
+      return Alert.alert("Campo vazio", "Preencha todos os campos.");
+    }
+    if (size < 70 || size > 240) {
+      return Alert.alert("Altura inválida", "Preencha o campo corretamente.");
+    }
+    if (weight < 35 || weight > 250) {
+      return Alert.alert("Peso inválido", "Preencha o campo corretamente.");
+    }
+    if (age < 10 || age > 100) {
+      return Alert.alert("Idade inválida", "Preencha o campo corretamente.");
+    }
+
+    const response = await handleUpdateUser({ name: userData?.name!, email: userData?.email!, sex, age, size, weight, physicalActivity, weightGoal });
+
+    return response;
+  }
+
 
   const genderData = [
-    { label: 'Masculino', value: 'Masculino' },
-    { label: 'Feminino', value: 'Feminino' },
+    { label: 'Masculino', value: 'MALE' },
+    { label: 'Feminino', value: 'FEMALE' },
   ];
 
   const goalData = [
-    { label: 'Ganho de massa muscular', value: 'Ganho de massa muscular' },
-    { label: 'Perda de gordura', value: 'Perda de gordura' },
-    { label: 'Manutenção', value: 'Manutenção' },
+    { label: 'Ganho de massa muscular', value: 'GAIN' },
+    { label: 'Perda de gordura', value: 'LOSE' },
+    { label: 'Manutenção', value: 'MAINTAIN' },
   ];
   const PhysicalConditioningData = [
-    { label: 'Sedentário', value: 'Sedentário' },
-    { label: 'Intermediário', value: 'Intermediário' },
-    { label: 'Ativo', value: 'Ativo' },
+    { label: 'Sedentário', value: 'NO' },
+    { label: 'Intermediário', value: 'REGULAR' },
+    { label: 'Ativo', value: 'FREQUENT' },
   ];
+
 
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>
       <Image source={anamnese} style={styles.healthImage} />
       <ScrollView style={{ height: '42%' }} showsVerticalScrollIndicator={false}>
         <View style={styles.container}>
-          <DropdownComponent selectLabel="Gênero" selectPlaceHolder="Selecione o gênero" isSearchable={false} color={'#FF7C29'} onSelectedValue={setSext} data={genderData} icon={genderIcon} />
+          <DropdownComponent selectLabel="Gênero" selectPlaceHolder="Selecione o gênero" isSearchable={false} color={'#FF7C29'} onSelectedValue={setSext} data={genderData} icon={genderIcon} defaultValue={sex} />
           <Input selectLabel="Altura" selectPlaceHolder="Insira a altura (em cm)" onSelectedValue={setSize} data={size} icon={heightIcon} color={'#FF7C29'} placeHolderColor={'black'} />
           <Input selectLabel="Peso" selectPlaceHolder="Insira o peso (em kg)" onSelectedValue={setWeight} data={weight} icon={weightIcon} color={'#FF7C29'} placeHolderColor={'black'} />
           <Input selectLabel="Idade" selectPlaceHolder="Insira sua idade" onSelectedValue={setAge} data={age} icon={birthIcon} color={'#FF7C29'} placeHolderColor={'black'} />
-          <DropdownComponent selectLabel="Condicionamento Físico" selectPlaceHolder="Selecione o condicionamento" isSearchable={false} color={'#FF7C29'} onSelectedValue={setPhysicalActivity} data={PhysicalConditioningData} icon={PhysicalConditioningIcon} />
-          <DropdownComponent selectLabel="Objetivo" selectPlaceHolder="Selecione o objetivo" isSearchable={false} color={'#FF7C29'} onSelectedValue={setWeightGoal} data={goalData} icon={goalIcon} />
+          <DropdownComponent selectLabel="Condicionamento Físico" selectPlaceHolder="Selecione o condicionamento" isSearchable={false} color={'#FF7C29'} onSelectedValue={setPhysicalActivity} data={PhysicalConditioningData} icon={PhysicalConditioningIcon} defaultValue={physicalActivity} />
+          <DropdownComponent selectLabel="Objetivo" selectPlaceHolder="Selecione o objetivo" isSearchable={false} color={'#FF7C29'} onSelectedValue={setWeightGoal} data={goalData} icon={goalIcon} defaultValue={weightGoal} />
         </View >
       </ScrollView>
       <TouchableOpacity
         style={styles.button}
-      // onPress={handleAICompletion}
+        onPress={
+          async () => {
+            const response = await onUpdateAnamneseHandle();
+            if (response != 'sucesso' && response != undefined) {
+              return (
+                Alert.alert(`${response}`)
+              )
+            }
+            if (response == 'sucesso') {
+              navigation.navigate('Home');
+            }
+          }}
       >
         <Text style={styles.textButton}>
           Finalizar

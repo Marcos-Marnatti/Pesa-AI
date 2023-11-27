@@ -62,7 +62,7 @@ export function ChatIA() {
       setChats((prevState) => [...prevState, newQuestion]);
 
       const response = await api.post('/ai-question/complete', data);
-      console.log(response.data);
+      // console.log(response.data);
       setAnswer(response.data)
 
       const newAnswer: ChatItemProp = {
@@ -73,7 +73,7 @@ export function ChatIA() {
       }
 
       setChats((prevState) => [...prevState, newAnswer]);
-      console.log(newAnswer);
+      // console.log(newAnswer);
 
     } catch (error) {
       console.log(error);

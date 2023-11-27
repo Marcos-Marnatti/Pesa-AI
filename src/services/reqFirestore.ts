@@ -44,7 +44,7 @@ export async function addMeal(userId: string, mealData: TMeals) {
     const newMealRef = await addDoc(mealsCollectionRef, {
       ...mealData,
     });
-    console.log('Meal added!');
+    // console.log('Meal added!');
     return newMealRef.id;
   } catch (error) {
     console.error('Error adding meal:', error);

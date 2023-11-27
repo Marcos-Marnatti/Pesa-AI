@@ -39,6 +39,15 @@ export function SignupAnamnese({ route }: any) {
     if (email.length === 0 || password.length === 0) {
       return Alert.alert("Campo vazio", "Preencha todos os campos.");
     }
+    if (size < 70 || size > 240) {
+      return Alert.alert("Altura inválida", "Preencha o campo corretamente.");
+    }
+    if (weight < 35 || weight > 250) {
+      return Alert.alert("Peso inválido", "Preencha o campo corretamente.");
+    }
+    if (age < 10 || age > 100) {
+      return Alert.alert("Idade inválida", "Preencha o campo corretamente.");
+    }
 
     const response = await handleSignUpAPI({ name, email, sex, password, age, size, weight, physicalActivity, weightGoal });
 

@@ -2,7 +2,7 @@ import { UserService } from "src/@types/User"
 
 export function handleTranslateGender(gender: string) {
   const translation = gender === 'MALE' ? 'Masculino' :
-    gender === 'FEAMALE' ? 'Feminino' : '';
+    gender === 'FEMALE' ? 'Feminino' : '';
 
   return translation;
 }

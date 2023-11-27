@@ -38,7 +38,7 @@ const AuthenticatedUserProvider = ({ children }: { children: React.ReactNode }) 
       }
     });
 
-  }, [currentUser]);
+  }, [currentUser, userData]);
 
 
   async function logout() {

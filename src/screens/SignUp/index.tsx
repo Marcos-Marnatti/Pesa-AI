@@ -14,6 +14,8 @@ import { styles } from './styles';
 
 export function SignUp() {
   const navigation = useNavigation<StackTypes>();
+  const emailRegex = new RegExp('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+[a-zA-Z0-9-.]');
+  const nameRegex = new RegExp('^[a-zA-Z ]+$');
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -25,6 +27,17 @@ export function SignUp() {
       Alert.alert("Campo vazio", "Preencha todos os campos.");
       return false;
     }
+
+    if (!nameRegex.test(name)) {
+      Alert.alert("Nome inválido", "Preencha o campo corretamente.");
+      return false;
+    }
+
+    if (!emailRegex.test(email)) {
+      Alert.alert("Email inválido", "Preencha o campo corretamente.");
+      return false;
+    }
+
     if (password !== passwordConfirm) {
       Alert.alert("Verifique sua senha", "As senhas nao conferem.")
       return false;

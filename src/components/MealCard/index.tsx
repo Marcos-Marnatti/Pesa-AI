@@ -73,7 +73,7 @@ const Menu = ({ meal, onRemoveFood, onAddFood, titleSize, detailsOpacity }: {
                       quantity: food.quantity!,
                       quantityUnit: "un",
                     };
-                    console.log(newFood);
+                    // console.log(newFood);
                     handleRemoveFood(newFood);
                   }}
                 >

@@ -18,10 +18,11 @@ type Props = {
   data: DataItem[],
   icon: ImageSourcePropType,
   color?: string;
+  defaultValue?: string;
 }
 
-const DropdownComponent = ({ selectLabel, selectPlaceHolder, isSearchable, onSelectedValue, data, color, icon }: Props) => {
-  const [value, setValue] = useState(null);
+const DropdownComponent = ({ selectLabel, selectPlaceHolder, isSearchable, onSelectedValue, data, color, icon, defaultValue }: Props) => {
+  const [value, setValue] = useState(defaultValue);
   const [isFocus, setIsFocus] = useState(false);
 
   const renderLabel = () => {
@@ -49,13 +50,14 @@ const DropdownComponent = ({ selectLabel, selectPlaceHolder, isSearchable, onSel
         maxHeight={300}
         labelField="label"
         valueField="value"
-        placeholder={!isFocus ? `${selectPlaceHolder}` : '...'}
+        // placeholder={!isFocus ? `${selectPlaceHolder}` : '...'}
+        placeholder={!isFocus ? `${value}` : `${selectPlaceHolder}`}
         searchPlaceholder="Search..."
         value={value}
         onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}
         onChange={item => {
-          setValue(item.value as unknown as React.SetStateAction<null>);
+          setValue(item.value);
           onSelectedValue(item.value);
           setIsFocus(false);
         }}

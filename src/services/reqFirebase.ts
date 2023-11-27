@@ -26,7 +26,7 @@ function firebaseErrors(error: AuthError) {
 export async function handleSignUp({ email, password }: { email: string; password: string; }) {
   const result = createUserWithEmailAndPassword(auth, email, password)
     .then((userData) => {
-      console.log(userData)
+      // console.log(userData)
       return 'sucesso'
     })
     .catch((error) => {
@@ -50,7 +50,7 @@ export async function handleResetPassword(email: string) {
 export async function handleSignIn({ email, password }: { email: string; password: string; }) {
   const result = signInWithEmailAndPassword(auth, email, password)
     .then((userData) => {
-      console.log(userData)
+      // console.log(userData)
       return 'sucesso'
     })
     .catch((error) => {
@@ -87,7 +87,7 @@ export async function handleSignUpAPI({ name, email, sex, password, age, size, w
 
   const result = axios.request(config)
     .then((userData) => {
-      console.log(userData)
+      // console.log(userData)
       return 'sucesso'
     })
     .catch((error) => {
@@ -114,6 +114,43 @@ export async function handleGetUserData(email: string) {
     })
     .catch((error) => {
       console.log(error);
+    });
+
+  return result;
+}
+
+export async function handleUpdateUser({ name, email, sex, age, size, weight, physicalActivity, weightGoal }: UserService) {
+  let data = JSON.stringify({
+    "emailId": email,
+    "name": name,
+    "size": size,
+    "age": age,
+    "weight": weight,
+    "sex": sex,
+    "physicalActivity": physicalActivity,
+    "weightGoal": weightGoal
+  });
+
+  // console.log(data);
+
+  let config = {
+    method: 'patch',
+    maxBodyLength: Infinity,
+    url: 'http://192.168.0.18:9090/user',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    data: data
+  };
+
+  const result = axios.request(config)
+    .then((response) => {
+      // console.log(JSON.stringify(response.status));
+      return 'sucesso';
+    })
+    .catch((error) => {
+      console.log(error);
+      return firebaseErrors(error);
     });
 
   return result;

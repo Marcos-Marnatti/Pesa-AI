@@ -82,8 +82,8 @@ const FoodSearchPopup = ({ isVisible, onClose, onAddFood, meal }: { isVisible: b
                     <Text style={{ fontFamily: 'Exo_800ExtraBold', fontSize: 12 }}>{item.description}</Text>
                     <Text style={{ fontFamily: 'Exo_800ExtraBold', fontSize: 12 }}>Calorias: <Text style={{ fontFamily: 'Exo_400Regular' }}>{item.cal}</Text></Text>
                     <Text style={{ fontFamily: 'Exo_800ExtraBold', fontSize: 12 }}>Proteína: <Text style={{ fontFamily: 'Exo_400Regular' }}>{item.protein}</Text></Text>
-                    <Text style={{ fontFamily: 'Exo_800ExtraBold', fontSize: 12 }}>Carboidrato: <Text style={{ fontFamily: 'Exo_400Regular' }}>{item.carbohydrate}</Text></Text>
-                    <Text style={{ fontFamily: 'Exo_800ExtraBold', fontSize: 12 }}>Gordura: <Text style={{ fontFamily: 'Exo_400Regular' }}>{item.fat}</Text></Text>
+                    <Text style={{ fontFamily: 'Exo_800ExtraBold', fontSize: 12 }}>Carboidrato: <Text style={{ fontFamily: 'Exo_400Regular' }}>{item.fat}</Text></Text>
+                    <Text style={{ fontFamily: 'Exo_800ExtraBold', fontSize: 12 }}>Gordura: <Text style={{ fontFamily: 'Exo_400Regular' }}>{item.carbohydrate}</Text></Text>
                     <Text style={{ fontFamily: 'Exo_800ExtraBold', fontSize: 12 }}>Quantidade:</Text>
                     <NumericInput
                       value={qtdValue}
@@ -107,8 +107,8 @@ const FoodSearchPopup = ({ isVisible, onClose, onAddFood, meal }: { isVisible: b
                         name: item.description!,
                         kcal: item.cal! * qtdValue,
                         protein: item.protein! * qtdValue,
-                        carbohydrate: item.carbohydrate! * qtdValue,
-                        fat: item.fat! * qtdValue,
+                        carbohydrate: item.fat! * qtdValue,
+                        fat: item.carbohydrate! * qtdValue,
                         quantity: 1 * qtdValue,
                         quantityUnit: "un",
                       };

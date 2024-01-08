@@ -1,0 +1,1 @@
+Projeto utilizado para cadeira de laboratório de software, utilizando JavaScript e TypeScript para o front-end utilizando expo, possui tambem 3 API's, uma feita com node e axios para realizar a conexão com o OpenAI e 2 feitas em java que realizam a autentificação do usuario e as rotas dos alimentos baseados na TACO
